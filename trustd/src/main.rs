@@ -63,7 +63,7 @@ async fn pm_mode() -> anyhow::Result<ExitCode> {
     let api = Trustd::parse_from([
         "trustd",
         "api",
-        "--auth-disabled",
+        "--embedded-oidc",
         "--db-port",
         &postgres.settings().port.to_string(),
     ]);
