@@ -208,6 +208,8 @@ impl InitData {
                                 svc,
                                 db.clone(),
                                 storage.clone(),
+                                // FIXME: make it easier
+                                self.authenticator.clone(),
                             );
 
                             #[cfg(feature = "ui")]
