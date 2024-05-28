@@ -97,7 +97,6 @@ jobs:
             # Cross' Ubuntu container is based on 20.04. Its OpenSSL version is too old for us.
             args: --features vendored
 
-
           - target: x86_64-unknown-linux-musl
             os: ubuntu-22.04
             args: --features vendored
@@ -141,7 +140,7 @@ jobs:
             ~/.cargo/registry/cache/
             ~/.cargo/git/db/
             target/
-          key: "${{ runner.os }}-release-${{ hashFiles('**/Cargo.lock') }}"
+          key: "${{ matrix.target }}-release${{ matrix.edition }}-${{ hashFiles('**/Cargo.lock') }}"
 
       - name: Export GitHub Actions cache environment variables for vcpkg
         uses: actions/github-script@v7
@@ -186,6 +185,8 @@ jobs:
           POSTGRESQL_VERSION: 16
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # required for retrieving postgres
         run: |
+          set -x
+
           if [[ "${{ matrix.xcode }}" == "true" ]]; then
             export SDKROOT=$(xcrun -sdk macosx --show-sdk-path)
             export MACOSX_DEPLOYMENT_TARGET=$(xcrun -sdk macosx --show-sdk-platform-version)
@@ -254,9 +255,65 @@ jobs:
           path: upload/*
           if-no-files-found: error
 
-  publish:
-    needs: [ init, build ]
+  container:
+    needs: [init, build ]
     runs-on: ubuntu-22.04
+    env:
+      IMAGE_NAME: trustd
+      IMAGE_TAG: ${{ needs.init.outputs.version }}
+    steps:
+      - name: Install qemu dependency
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y qemu-user-static
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/download-artifact@v4
+        with:
+          path: ${{ github.workspace }}/download
+
+      - name: Display downloaded content
+        run: ls -R ${{ github.workspace }}/download
+
+      - name: Build Image
+        id: build-image
+        uses: redhat-actions/buildah-build@v2
+        with:
+          image: ${{ env.IMAGE_NAME }}
+          tags: ${{ env.IMAGE_TAG }}
+          envs: |
+            TAG=${{ env.IMAGE_TAG }}
+          build-args: |
+            tag=${{ env.IMAGE_TAG }}
+          platforms: linux/amd64, linux/arm64
+          containerfiles: |
+            .github/scripts/Containerfile
+
+      - name: Check images created
+        run: buildah images | grep '${{ env.IMAGE_NAME }}'
+
+      - name: Save image
+        run: podman save --multi-image-archive ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} > image.tar
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: container
+          path: image.tar
+          if-no-files-found: error
+
+  publish:
+    needs: [ init, build, container ]
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    env:
+      IMAGE_NAME: trustd
     steps:
 
       - name: Checkout
@@ -292,6 +349,33 @@ jobs:
       - uses: actions/attest-build-provenance@v1
         with:
           subject-path: 'staging/*'
+
+      # Publish the container
+
+      - name: Load container
+        run: |
+          podman load --input ~/download/container/image.tar
+
+      - name: Log in to ghcr.io
+        uses: redhat-actions/podman-login@v1
+        with:
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: "ghcr.io"
+
+      - name: Push to ghcr.io
+        id: push-images
+        env:
+          IMAGE: "ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ needs.init.outputs.version }}"
+        run: |
+          podman push \
+            "${{ env.IMAGE_NAME }}:${{ needs.init.outputs.version }}" \
+            "${IMAGE}" \
+            --digestfile "${RUNNER_TEMP}/push.digest"
+          echo "imageDigest=$(cat ${RUNNER_TEMP}/push.digest)" >> $GITHUB_OUTPUT
+          rm ${RUNNER_TEMP}/push.digest
+
+      # Final step, create the GitHub release, attaching the files
 
       - name: Create Release
         env:

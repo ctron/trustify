@@ -1,0 +1,18 @@
+FROM registry.access.redhat.com/ubi9/ubi:latest as builder
+
+ARG tag
+
+RUN uname -m
+RUN mkdir /unpack
+COPY download/ /unpack/
+RUN cd unpack && \
+    tar --strip-components 2 -xavf trustd-$(uname -m)-unknown-linux-gnu/trustd-${tag}-$(uname -m)-unknown-linux-gnu.tar.gz && \
+    find
+
+FROM registry.access.redhat.com/ubi9/ubi-minimal:latest
+
+RUN microdnf -y install zlib
+
+COPY --from=builder /unpack/trustd /usr/local/bin
+
+ENTRYPOINT ["/usr/local/bin/trustd"]
