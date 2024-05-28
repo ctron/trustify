@@ -63,6 +63,7 @@ async fn pm_mode() -> anyhow::Result<ExitCode> {
     let api = Trustd::parse_from([
         "trustd",
         "api",
+        #[cfg(feature = "garage-door")]
         "--embedded-oidc",
         "--db-port",
         &postgres.settings().port.to_string(),
