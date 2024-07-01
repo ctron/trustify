@@ -83,7 +83,7 @@ impl Graph {
         &self,
         tx: TX,
     ) -> Result<Vec<AdvisoryContext>, Error> {
-        Ok(entity::advisory::Entity::find()
+        Ok(advisory::Entity::find()
             .filter(Condition::all())
             .all(&self.connection(&tx))
             .await?
@@ -116,7 +116,7 @@ impl Graph {
             None
         };
 
-        let model = entity::advisory::ActiveModel {
+        let model = advisory::ActiveModel {
             id: Default::default(),
             identifier: Set(identifier),
             issuer_id: Set(organization.map(|org| org.organization.id)),
@@ -262,7 +262,7 @@ impl<'g> AdvisoryContext<'g> {
             .filter(entity::advisory_vulnerability::Column::AdvisoryId.eq(self.advisory.id))
             .all(&self.graph.connection(&tx))
             .await?
-            .drain(0..)
+            .into_iter()
             .map(|e| (self, e).into())
             .collect())
     }
