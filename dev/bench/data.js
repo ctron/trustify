@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1730799955570,
+  "lastUpdate": 1730973077633,
   "repoUrl": "https://github.com/ctron/trustify",
   "entries": {
     "Benchmark": [
@@ -226,6 +226,35 @@ window.BENCHMARK_DATA = {
           "url": "https://github.com/ctron/trustify/commit/030790fa20f9fee3b30f713b0e1f0b7943b8300b"
         },
         "date": 1730799955009,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Ingest DS3",
+            "value": 22,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "ctron@dentrassi.de",
+            "name": "Jens Reimann",
+            "username": "ctron"
+          },
+          "committer": {
+            "email": "ctron@dentrassi.de",
+            "name": "Jens Reimann",
+            "username": "ctron"
+          },
+          "distinct": false,
+          "id": "6d6433c50935b782b5c5165f32a13af2743cc347",
+          "message": "fix: add missing \"number_of_vulnerabilities\" field\n\nCloses https://github.com/trustification/trustify/issues/976",
+          "timestamp": "2024-11-07T09:02:06Z",
+          "tree_id": "6c3b41705d092c5ab9764046573f58558a5bca44",
+          "url": "https://github.com/ctron/trustify/commit/6d6433c50935b782b5c5165f32a13af2743cc347"
+        },
+        "date": 1730973077019,
         "tool": "customSmallerIsBetter",
         "benches": [
           {
