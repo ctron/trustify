@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1731587982072,
+  "lastUpdate": 1732112744835,
   "repoUrl": "https://github.com/ctron/trustify",
   "entries": {
     "Benchmark": [
@@ -342,6 +342,35 @@ window.BENCHMARK_DATA = {
           "url": "https://github.com/ctron/trustify/commit/ed72d871cd9a9d2afe6ce30380d0bbd5edf7b497"
         },
         "date": 1731587981429,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Ingest DS3",
+            "value": 22,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jim@crossleys.org",
+            "name": "Jim Crossley",
+            "username": "jcrossley3"
+          },
+          "committer": {
+            "email": "ctron@dentrassi.de",
+            "name": "Jens Reimann",
+            "username": "ctron"
+          },
+          "distinct": true,
+          "id": "66c20fd7ac60bcef09bf4373adce8b92ee6120fa",
+          "message": "fix: s3 storage config options and encoding case insensitivity\n\nSigned-off-by: Jim Crossley <jim@crossleys.org>",
+          "timestamp": "2024-11-19T08:25:36Z",
+          "tree_id": "8c1796088b89b1a4a4e0339492e63e79d39c1931",
+          "url": "https://github.com/ctron/trustify/commit/66c20fd7ac60bcef09bf4373adce8b92ee6120fa"
+        },
+        "date": 1732112743852,
         "tool": "customSmallerIsBetter",
         "benches": [
           {
