@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1732112744835,
+  "lastUpdate": 1732178427838,
   "repoUrl": "https://github.com/ctron/trustify",
   "entries": {
     "Benchmark": [
@@ -371,6 +371,35 @@ window.BENCHMARK_DATA = {
           "url": "https://github.com/ctron/trustify/commit/66c20fd7ac60bcef09bf4373adce8b92ee6120fa"
         },
         "date": 1732112743852,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Ingest DS3",
+            "value": 22,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "mrizzi@redhat.com",
+            "name": "mrizzi",
+            "username": "mrizzi"
+          },
+          "committer": {
+            "email": "mrizzi@users.noreply.github.com",
+            "name": "Marco Rizzi",
+            "username": "mrizzi"
+          },
+          "distinct": true,
+          "id": "40de9830e238ed742f9b523fed9c9cb0e0ab80b7",
+          "message": "test: add test for AI 'advisory-info' tool\n\nSigned-off-by: mrizzi <mrizzi@redhat.com>",
+          "timestamp": "2024-11-20T15:50:21Z",
+          "tree_id": "6b7e6d32e3f97339b553103ab62e42dbc193c3d6",
+          "url": "https://github.com/ctron/trustify/commit/40de9830e238ed742f9b523fed9c9cb0e0ab80b7"
+        },
+        "date": 1732178426647,
         "tool": "customSmallerIsBetter",
         "benches": [
           {
