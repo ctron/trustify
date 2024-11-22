@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1732188431462,
+  "lastUpdate": 1732282335141,
   "repoUrl": "https://github.com/ctron/trustify",
   "entries": {
     "Benchmark": [
@@ -434,6 +434,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Ingest DS3",
             "value": 21,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "ctron@dentrassi.de",
+            "name": "Jens Reimann",
+            "username": "ctron"
+          },
+          "committer": {
+            "email": "ctron@dentrassi.de",
+            "name": "Jens Reimann",
+            "username": "ctron"
+          },
+          "distinct": true,
+          "id": "1e9b3e9cdd2c7e5938df7bc925e008b1e6cb2935",
+          "message": "fix: don't check if the bucket exists.\n\nPerforming an \"exists\" check requires the s3:ListAllMyBuckets\npermission. Which feels excessive for such a simple check.\n\nCloses: https://github.com/trustification/trustify/issues/1038",
+          "timestamp": "2024-11-22T13:00:46Z",
+          "tree_id": "9d12d031683007be4fc78ba90491113ee11eaf75",
+          "url": "https://github.com/ctron/trustify/commit/1e9b3e9cdd2c7e5938df7bc925e008b1e6cb2935"
+        },
+        "date": 1732282334810,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Ingest DS3",
+            "value": 24,
             "unit": "s"
           }
         ]
