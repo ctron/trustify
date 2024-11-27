@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1732285576530,
+  "lastUpdate": 1732716000779,
   "repoUrl": "https://github.com/ctron/trustify",
   "entries": {
     "Benchmark": [
@@ -487,6 +487,35 @@ window.BENCHMARK_DATA = {
           "url": "https://github.com/ctron/trustify/commit/67e725aab8bd88ad793ae6452481552737085db7"
         },
         "date": 1732285575772,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Ingest DS3",
+            "value": 22,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "ctron@dentrassi.de",
+            "name": "Jens Reimann",
+            "username": "ctron"
+          },
+          "committer": {
+            "email": "ctron@dentrassi.de",
+            "name": "Jens Reimann",
+            "username": "ctron"
+          },
+          "distinct": true,
+          "id": "70a8dc76a4fbd29e76f9b233239f541bcdecf98c",
+          "message": "chore: export more information, document terraform",
+          "timestamp": "2024-11-27T07:04:20Z",
+          "tree_id": "174e177d42895ce3493732a49ed28cf750df0806",
+          "url": "https://github.com/ctron/trustify/commit/70a8dc76a4fbd29e76f9b233239f541bcdecf98c"
+        },
+        "date": 1732715999979,
         "tool": "customSmallerIsBetter",
         "benches": [
           {
