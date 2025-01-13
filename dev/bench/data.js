@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1734695919469,
+  "lastUpdate": 1736764863751,
   "repoUrl": "https://github.com/ctron/trustify",
   "entries": {
     "Benchmark": [
@@ -753,6 +753,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Ingest DS3",
             "value": 7,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jim@crossleys.org",
+            "name": "Jim Crossley",
+            "username": "jcrossley3"
+          },
+          "committer": {
+            "email": "jim@crossleys.org",
+            "name": "Jim Crossley",
+            "username": "jcrossley3"
+          },
+          "distinct": false,
+          "id": "4a7ae8479540d03d9546a6d48992c99e0770d1a7",
+          "message": "feat: add average_severity to PurlStatus\n\nFixes: 1099\n\nSigned-off-by: Jim Crossley <jim@crossleys.org>",
+          "timestamp": "2025-01-09T14:15:19Z",
+          "tree_id": "3ee581fadf2dfa29b90ec3aa12f36f40fc7e5f21",
+          "url": "https://github.com/ctron/trustify/commit/4a7ae8479540d03d9546a6d48992c99e0770d1a7"
+        },
+        "date": 1736764863071,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Ingest DS3",
+            "value": 6,
             "unit": "s"
           }
         ]
