@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1736764863751,
+  "lastUpdate": 1737112579650,
   "repoUrl": "https://github.com/ctron/trustify",
   "entries": {
     "Benchmark": [
@@ -782,6 +782,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Ingest DS3",
             "value": 6,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "ctron@dentrassi.de",
+            "name": "Jens Reimann",
+            "username": "ctron"
+          },
+          "committer": {
+            "email": "ctron@dentrassi.de",
+            "name": "Jens Reimann",
+            "username": "ctron"
+          },
+          "distinct": false,
+          "id": "43c88f630972bd15ceb5f427af7fe24de396c106",
+          "message": "chore: fix up v1 -> v2 API migration for AI endpoints",
+          "timestamp": "2025-01-16T14:24:44Z",
+          "tree_id": "0cb81b2fc22eeb6c4648a4d401593a9061eca5e9",
+          "url": "https://github.com/ctron/trustify/commit/43c88f630972bd15ceb5f427af7fe24de396c106"
+        },
+        "date": 1737112579016,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Ingest DS3",
+            "value": 0,
             "unit": "s"
           }
         ]
