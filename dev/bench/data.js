@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1737112579650,
+  "lastUpdate": 1737476131628,
   "repoUrl": "https://github.com/ctron/trustify",
   "entries": {
     "Benchmark": [
@@ -806,6 +806,35 @@ window.BENCHMARK_DATA = {
           "url": "https://github.com/ctron/trustify/commit/43c88f630972bd15ceb5f427af7fe24de396c106"
         },
         "date": 1737112579016,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Ingest DS3",
+            "value": 0,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jim@crossleys.org",
+            "name": "Jim Crossley",
+            "username": "jcrossley3"
+          },
+          "committer": {
+            "email": "jim@crossleys.org",
+            "name": "Jim Crossley",
+            "username": "jcrossley3"
+          },
+          "distinct": false,
+          "id": "a532dd8543f295acdd72cd57c5a3ea895053c94a",
+          "message": "Clarify the parent and child purl's in the unit test\n\nSigned-off-by: Jim Crossley <jim@crossleys.org>",
+          "timestamp": "2025-01-21T15:42:28Z",
+          "tree_id": "52386649212f3539e25eb28bfd5e7c04c29f3a01",
+          "url": "https://github.com/ctron/trustify/commit/a532dd8543f295acdd72cd57c5a3ea895053c94a"
+        },
+        "date": 1737476131124,
         "tool": "customSmallerIsBetter",
         "benches": [
           {
