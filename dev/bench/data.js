@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1737476131628,
+  "lastUpdate": 1737534665277,
   "repoUrl": "https://github.com/ctron/trustify",
   "entries": {
     "Benchmark": [
@@ -835,6 +835,35 @@ window.BENCHMARK_DATA = {
           "url": "https://github.com/ctron/trustify/commit/a532dd8543f295acdd72cd57c5a3ea895053c94a"
         },
         "date": 1737476131124,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Ingest DS3",
+            "value": 0,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "hchirino@redhat.com",
+            "name": "Hiram Chirino",
+            "username": "chirino"
+          },
+          "committer": {
+            "email": "hchirino@redhat.com",
+            "name": "Hiram Chirino",
+            "username": "chirino"
+          },
+          "distinct": true,
+          "id": "f54d17146eb9f8b15ec9057e9a01185cffaf9369",
+          "message": "Apply suggestions from code review\n\nCo-authored-by: Jim Crossley <jim@crossleys.org>",
+          "timestamp": "2025-01-22T00:46:20Z",
+          "tree_id": "5ecb6f363695eeae0f73e5b41244d1a5709e08d8",
+          "url": "https://github.com/ctron/trustify/commit/f54d17146eb9f8b15ec9057e9a01185cffaf9369"
+        },
+        "date": 1737534664739,
         "tool": "customSmallerIsBetter",
         "benches": [
           {
