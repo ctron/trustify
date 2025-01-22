@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1737534665277,
+  "lastUpdate": 1737548193308,
   "repoUrl": "https://github.com/ctron/trustify",
   "entries": {
     "Benchmark": [
@@ -864,6 +864,35 @@ window.BENCHMARK_DATA = {
           "url": "https://github.com/ctron/trustify/commit/f54d17146eb9f8b15ec9057e9a01185cffaf9369"
         },
         "date": 1737534664739,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Ingest DS3",
+            "value": 0,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "ctron@dentrassi.de",
+            "name": "Jens Reimann",
+            "username": "ctron"
+          },
+          "committer": {
+            "email": "ctron@dentrassi.de",
+            "name": "Jens Reimann",
+            "username": "ctron"
+          },
+          "distinct": true,
+          "id": "efc14daa5e187b50a6c7877eb4c85b52b6b61b39",
+          "message": "fix: report CPE parsing as \"bad request\"\n\nRight now, it is being reported as an internal server error.",
+          "timestamp": "2025-01-22T10:31:57Z",
+          "tree_id": "3fe87b8664738e59a35d5c9632a0acd8f7e69b0a",
+          "url": "https://github.com/ctron/trustify/commit/efc14daa5e187b50a6c7877eb4c85b52b6b61b39"
+        },
+        "date": 1737548192669,
         "tool": "customSmallerIsBetter",
         "benches": [
           {
