@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1737548193308,
+  "lastUpdate": 1738675264518,
   "repoUrl": "https://github.com/ctron/trustify",
   "entries": {
     "Benchmark": [
@@ -898,6 +898,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Ingest DS3",
             "value": 0,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "ctron@dentrassi.de",
+            "name": "Jens Reimann",
+            "username": "ctron"
+          },
+          "committer": {
+            "email": "ctron@dentrassi.de",
+            "name": "Jens Reimann",
+            "username": "ctron"
+          },
+          "distinct": false,
+          "id": "f4fd15ff323bd0b69e8248bbf3a4906c5305f9d1",
+          "message": "docs(analysis): improve openapi documentation",
+          "timestamp": "2025-02-04T12:20:14Z",
+          "tree_id": "33f0755395becc9d4b23bbc42cbeb485155a8117",
+          "url": "https://github.com/ctron/trustify/commit/f4fd15ff323bd0b69e8248bbf3a4906c5305f9d1"
+        },
+        "date": 1738675263909,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Ingest DS3",
+            "value": 7,
             "unit": "s"
           }
         ]
