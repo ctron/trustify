@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1739196878027,
+  "lastUpdate": 1739260671298,
   "repoUrl": "https://github.com/ctron/trustify",
   "entries": {
     "Benchmark": [
@@ -1038,6 +1038,35 @@ window.BENCHMARK_DATA = {
           "url": "https://github.com/ctron/trustify/commit/5112b66b0179fbe060c370843042d609d5e29312"
         },
         "date": 1739196877363,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Ingest DS3",
+            "value": 7,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jfuller@redhat.com",
+            "name": "JimFuller-RedHat",
+            "username": "JimFuller-RedHat"
+          },
+          "committer": {
+            "email": "jfuller@redhat.com",
+            "name": "JimFuller-RedHat",
+            "username": "JimFuller-RedHat"
+          },
+          "distinct": true,
+          "id": "b0eb7a654ff1f2e8ffad9d818b85523777bbcead",
+          "message": "fix pg conf typo for embedded db",
+          "timestamp": "2025-02-10T22:28:54+01:00",
+          "tree_id": "ee57cfd11ba71ebafcd2a0f4cacbee333957b9c0",
+          "url": "https://github.com/ctron/trustify/commit/b0eb7a654ff1f2e8ffad9d818b85523777bbcead"
+        },
+        "date": 1739260670574,
         "tool": "customSmallerIsBetter",
         "benches": [
           {
