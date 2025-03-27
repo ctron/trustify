@@ -1,5 +1,7 @@
 # Trustify
 
+Knock, knock, …
+
 [![ci](https://github.com/trustification/trustify/actions/workflows/ci.yaml/badge.svg)](https://github.com/trustification/trustify/actions/workflows/ci.yaml)
 
 Trustify provides a single, searchable abstraction over all cyclonedx/spdx SBOMs - cross referencing against public security advisories to help identify and respond to software security threats & vulnerabilities.
