@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1742572776356,
+  "lastUpdate": 1743081063193,
   "repoUrl": "https://github.com/ctron/trustify",
   "entries": {
     "Benchmark": [
@@ -1391,6 +1391,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Ingest DS3",
             "value": 7,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "00hf11@gmail.com",
+            "name": "Helio Frota",
+            "username": "helio-frota"
+          },
+          "committer": {
+            "email": "00hf11@gmail.com",
+            "name": "Helio Frota",
+            "username": "helio-frota"
+          },
+          "distinct": true,
+          "id": "91cf5ce0f674585f9a369294523a05570fc4be9d",
+          "message": "refactor: common code for criterion benches\n\nCloses #1354",
+          "timestamp": "2025-03-27T12:20:40Z",
+          "tree_id": "f9016d3fb0ba3c20a35fa80409f0ad02adbc2aba",
+          "url": "https://github.com/ctron/trustify/commit/91cf5ce0f674585f9a369294523a05570fc4be9d"
+        },
+        "date": 1743081062193,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Ingest DS3",
+            "value": 8,
             "unit": "s"
           }
         ]
