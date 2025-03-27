@@ -1,0 +1,64 @@
+name: scale-test
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  scale-test:
+    if: github.event.comment.body == '/scale-test' && github.event.issue.pull_request != null
+    runs-on: ubuntu-24.04
+
+    steps:
+
+      - name: Maximize build space
+        run: |
+          df -h
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /opt/ghc
+          sudo rm -rf /opt/hostedtoolcache/CodeQL
+          sudo docker image prune --all --force
+          sudo rm -Rf ${JAVA_HOME_8_X64}
+          sudo rm -Rf ${JAVA_HOME_11_X64}
+          sudo rm -Rf ${JAVA_HOME_17_X64}
+          sudo rm -Rf ${RUBY_PATH}
+          df -h
+
+      - uses: actions/checkout@v4
+        with:
+          repository: "trustification/trustify-load-test-runs"
+
+      - run: |
+          mkdir report
+          mkdir baseline
+
+      - name: Build Containers
+        working-directory: run
+        run: |
+          docker compose -f compose.yaml build --build-args rev=${{ github.event.pull_request.head.sha }}
+
+      - name: Run
+        working-directory: run
+        run: |
+          docker compose -f compose.yaml run loadtests
+
+      - if: always()
+        working-directory: run
+        run: |
+          docker compose -f compose.yaml logs > containers.log
+
+      - name: Cleanup
+        working-directory: run
+        if: always()
+        run: |
+          docker compose -f compose.yaml down
+
+      - name: Upload container logs
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: logs
+          path: |
+            run/containers.log
+          if-no-files-found: error
