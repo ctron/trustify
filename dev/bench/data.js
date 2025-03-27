@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1743081063193,
+  "lastUpdate": 1743084238748,
   "repoUrl": "https://github.com/ctron/trustify",
   "entries": {
     "Benchmark": [
@@ -1415,6 +1415,35 @@ window.BENCHMARK_DATA = {
           "url": "https://github.com/ctron/trustify/commit/91cf5ce0f674585f9a369294523a05570fc4be9d"
         },
         "date": 1743081062193,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Ingest DS3",
+            "value": 8,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "ctron@dentrassi.de",
+            "name": "Jens Reimann",
+            "username": "ctron"
+          },
+          "committer": {
+            "email": "ctron@dentrassi.de",
+            "name": "Jens Reimann",
+            "username": "ctron"
+          },
+          "distinct": false,
+          "id": "c8929195552d1f0e640805ddcd91ee99085d3056",
+          "message": "ci: allow triggering a scale test report using a PR comment",
+          "timestamp": "2025-03-27T14:53:52+01:00",
+          "tree_id": "6f8e0c7f2b116ec97e67eb179e1cbf07261f1ed5",
+          "url": "https://github.com/ctron/trustify/commit/c8929195552d1f0e640805ddcd91ee99085d3056"
+        },
+        "date": 1743084237647,
         "tool": "customSmallerIsBetter",
         "benches": [
           {
