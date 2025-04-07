@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1743495516379,
+  "lastUpdate": 1744027744299,
   "repoUrl": "https://github.com/ctron/trustify",
   "entries": {
     "Benchmark": [
@@ -1681,6 +1681,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Ingest DS3",
             "value": 8,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "dbosanac@redhat.com",
+            "name": "Dejan Bosanac",
+            "username": "dejanb"
+          },
+          "committer": {
+            "email": "dbosanac@redhat.com",
+            "name": "Dejan Bosanac",
+            "username": "dejanb"
+          },
+          "distinct": true,
+          "id": "8f150ceefc2008a985ab2af90d3a4624cb9d8a32",
+          "message": "feat: a new dataset containing a few sboms and osv advisories that had issues in correlation",
+          "timestamp": "2025-04-07T10:20:44Z",
+          "tree_id": "3c7853408e130c128d8c543038db2e37d12b29ea",
+          "url": "https://github.com/ctron/trustify/commit/8f150ceefc2008a985ab2af90d3a4624cb9d8a32"
+        },
+        "date": 1744027743109,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Ingest DS3",
+            "value": 7,
             "unit": "s"
           }
         ]
