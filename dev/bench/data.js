@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1744027744299,
+  "lastUpdate": 1744270256555,
   "repoUrl": "https://github.com/ctron/trustify",
   "entries": {
     "Benchmark": [
@@ -1710,6 +1710,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Ingest DS3",
             "value": 7,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "ctron@dentrassi.de",
+            "name": "Jens Reimann",
+            "username": "ctron"
+          },
+          "committer": {
+            "email": "ctron@dentrassi.de",
+            "name": "Jens Reimann",
+            "username": "ctron"
+          },
+          "distinct": true,
+          "id": "a0d052cf54d0e209f2910a26a03796be30c6de16",
+          "message": "fix: return 400 instead of 500 in case of validation errors\n\nWhen a document contains invalid references (or other validation errors)\nwe reject the content. However, returning 500 (or any 5xx) is not\ncorrect. It's a client error (4xx) and the best match seems 400.",
+          "timestamp": "2025-04-10T06:37:04Z",
+          "tree_id": "8c5c5dfc6d6fcad1de595582b913420ac88e097c",
+          "url": "https://github.com/ctron/trustify/commit/a0d052cf54d0e209f2910a26a03796be30c6de16"
+        },
+        "date": 1744270255881,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Ingest DS3",
+            "value": 8,
             "unit": "s"
           }
         ]
