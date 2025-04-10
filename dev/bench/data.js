@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1744270256555,
+  "lastUpdate": 1744286733409,
   "repoUrl": "https://github.com/ctron/trustify",
   "entries": {
     "Benchmark": [
@@ -1734,6 +1734,35 @@ window.BENCHMARK_DATA = {
           "url": "https://github.com/ctron/trustify/commit/a0d052cf54d0e209f2910a26a03796be30c6de16"
         },
         "date": 1744270255881,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Ingest DS3",
+            "value": 8,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jfuller@redhat.com",
+            "name": "JimFuller-RedHat",
+            "username": "JimFuller-RedHat"
+          },
+          "committer": {
+            "email": "81251736+JimFuller-RedHat@users.noreply.github.com",
+            "name": "Jim Fuller",
+            "username": "JimFuller-RedHat"
+          },
+          "distinct": true,
+          "id": "c3968f94d6a207554df026d553583d6a35906298",
+          "message": "update tests with real numbers",
+          "timestamp": "2025-04-10T09:45:49Z",
+          "tree_id": "492901ad2f85080e9262d859effdd5cae852e2f4",
+          "url": "https://github.com/ctron/trustify/commit/c3968f94d6a207554df026d553583d6a35906298"
+        },
+        "date": 1744286732236,
         "tool": "customSmallerIsBetter",
         "benches": [
           {
