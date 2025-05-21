@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1746427668530,
+  "lastUpdate": 1747838001464,
   "repoUrl": "https://github.com/ctron/trustify",
   "entries": {
     "Benchmark": [
@@ -1850,6 +1850,35 @@ window.BENCHMARK_DATA = {
           "url": "https://github.com/ctron/trustify/commit/a0cee9f28530484edb670b504dbd3ca055e464aa"
         },
         "date": 1746427667611,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Ingest DS3",
+            "value": 8,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "ctron@dentrassi.de",
+            "name": "Jens Reimann",
+            "username": "ctron"
+          },
+          "committer": {
+            "email": "ctron@dentrassi.de",
+            "name": "Jens Reimann",
+            "username": "ctron"
+          },
+          "distinct": true,
+          "id": "533398a4d934a513766e07582f8084610dd26c53",
+          "message": "docs: ADR for an upload API targeted towards the browser",
+          "timestamp": "2025-05-21T13:23:50Z",
+          "tree_id": "305a5dd90ceaaac84619c519297a892057c3b249",
+          "url": "https://github.com/ctron/trustify/commit/533398a4d934a513766e07582f8084610dd26c53"
+        },
+        "date": 1747838000427,
         "tool": "customSmallerIsBetter",
         "benches": [
           {
