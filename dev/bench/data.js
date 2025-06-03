@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1748876234201,
+  "lastUpdate": 1748949816211,
   "repoUrl": "https://github.com/ctron/trustify",
   "entries": {
     "Benchmark": [
@@ -1995,6 +1995,35 @@ window.BENCHMARK_DATA = {
           "url": "https://github.com/ctron/trustify/commit/f99ca8738899adc8e1e29ba4d1e052b349fa6edf"
         },
         "date": 1748876233388,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Ingest DS3",
+            "value": 8,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "ctron@dentrassi.de",
+            "name": "Jens Reimann",
+            "username": "ctron"
+          },
+          "committer": {
+            "email": "ctron@dentrassi.de",
+            "name": "Jens Reimann",
+            "username": "ctron"
+          },
+          "distinct": false,
+          "id": "ec9926aae84fa6cc51b3c5788662cb3844ce8be9",
+          "message": "ci(codecov): limit to one concurrent job\n\nWe run into SIGTERM issues during compilation. Which indicates a\nmemory limit we hit. Limiting to one job might work around this.",
+          "timestamp": "2025-06-03T09:23:25Z",
+          "tree_id": "0b0560950109f706ec852b8d5a4df1e576d2ee83",
+          "url": "https://github.com/ctron/trustify/commit/ec9926aae84fa6cc51b3c5788662cb3844ce8be9"
+        },
+        "date": 1748949815223,
         "tool": "customSmallerIsBetter",
         "benches": [
           {
