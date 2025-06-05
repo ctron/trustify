@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1749130634412,
+  "lastUpdate": 1749135088694,
   "repoUrl": "https://github.com/ctron/trustify",
   "entries": {
     "Benchmark": [
@@ -2053,6 +2053,35 @@ window.BENCHMARK_DATA = {
           "url": "https://github.com/ctron/trustify/commit/058fd52b11163df3b2c1362908d579ddb7358ed8"
         },
         "date": 1749130633586,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Ingest DS3",
+            "value": 8,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "00hf11@gmail.com",
+            "name": "Helio Frota",
+            "username": "helio-frota"
+          },
+          "committer": {
+            "email": "00hf11@gmail.com",
+            "name": "Helio Frota",
+            "username": "helio-frota"
+          },
+          "distinct": true,
+          "id": "f645e456d8c4fdcb1c43c21f6a1f799d3305f28a",
+          "message": "chore: updates otel dev docs\n\n* Also adds skeleton and configs for grafana dashboards",
+          "timestamp": "2025-06-05T13:05:37Z",
+          "tree_id": "1772a639899afa7f1a3d8de3eea06b2babb22d79",
+          "url": "https://github.com/ctron/trustify/commit/f645e456d8c4fdcb1c43c21f6a1f799d3305f28a"
+        },
+        "date": 1749135087264,
         "tool": "customSmallerIsBetter",
         "benches": [
           {
