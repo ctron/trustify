@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1749196731124,
+  "lastUpdate": 1749214767287,
   "repoUrl": "https://github.com/ctron/trustify",
   "entries": {
     "Benchmark": [
@@ -2116,6 +2116,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Ingest DS3",
             "value": 7,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "ctron@dentrassi.de",
+            "name": "Jens Reimann",
+            "username": "ctron"
+          },
+          "committer": {
+            "email": "00hf11@gmail.com",
+            "name": "Helio Frota",
+            "username": "helio-frota"
+          },
+          "distinct": true,
+          "id": "93df8ff9958e4dea60bbb52a90b84e139e44a75a",
+          "message": "test(importer): increase unit test coverage and refactor test helpers\n\nAdd unit tests for Importer methods: is_due, is_running, is_enabled.\n\nAssisted-by: Cursor",
+          "timestamp": "2025-06-06T11:39:59Z",
+          "tree_id": "639cc9f8a0413618c5c68d0a7218681bc4b4896e",
+          "url": "https://github.com/ctron/trustify/commit/93df8ff9958e4dea60bbb52a90b84e139e44a75a"
+        },
+        "date": 1749214765881,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Ingest DS3",
+            "value": 8,
             "unit": "s"
           }
         ]
