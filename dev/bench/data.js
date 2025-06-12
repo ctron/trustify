@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1749543001002,
+  "lastUpdate": 1749734111791,
   "repoUrl": "https://github.com/ctron/trustify",
   "entries": {
     "Benchmark": [
@@ -2169,6 +2169,35 @@ window.BENCHMARK_DATA = {
           "url": "https://github.com/ctron/trustify/commit/7e433a4092bf99fcbf70f62ae4fa2f6ee7caab71"
         },
         "date": 1749543000232,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Ingest DS3",
+            "value": 8,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "ctron@dentrassi.de",
+            "name": "Jens Reimann",
+            "username": "ctron"
+          },
+          "committer": {
+            "email": "ctron@dentrassi.de",
+            "name": "Jens Reimann",
+            "username": "ctron"
+          },
+          "distinct": true,
+          "id": "4c43c7f495d940d439c472fb09d6b181401ee3a4",
+          "message": "test: ensure that example importers can be created",
+          "timestamp": "2025-06-12T07:08:19Z",
+          "tree_id": "8b55d17b7af27aabec18b0c903a9ec653ffabaa2",
+          "url": "https://github.com/ctron/trustify/commit/4c43c7f495d940d439c472fb09d6b181401ee3a4"
+        },
+        "date": 1749734110150,
         "tool": "customSmallerIsBetter",
         "benches": [
           {
