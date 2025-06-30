@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1750061643918,
+  "lastUpdate": 1751291252916,
   "repoUrl": "https://github.com/ctron/trustify",
   "entries": {
     "Benchmark": [
@@ -2227,6 +2227,35 @@ window.BENCHMARK_DATA = {
           "url": "https://github.com/ctron/trustify/commit/b8ef582a6185e78962cc3b69e66dfab8a322010b"
         },
         "date": 1750061642529,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Ingest DS3",
+            "value": 8,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "bxf12315@gmail.com",
+            "name": "Xiaofeng Bai",
+            "username": "bxf12315"
+          },
+          "committer": {
+            "email": "00hf11@gmail.com",
+            "name": "Helio Frota",
+            "username": "helio-frota"
+          },
+          "distinct": true,
+          "id": "97c7dd697dce5e25f8f890f935792c98706e2dcb",
+          "message": "TC-2414 License Export SPDX package CPE mismatches to SBOM",
+          "timestamp": "2025-06-24T09:55:03Z",
+          "tree_id": "253f79001cc6a86c1da8057326f7937f0cb496cb",
+          "url": "https://github.com/ctron/trustify/commit/97c7dd697dce5e25f8f890f935792c98706e2dcb"
+        },
+        "date": 1751291251543,
         "tool": "customSmallerIsBetter",
         "benches": [
           {
