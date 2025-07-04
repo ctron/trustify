@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1751291252916,
+  "lastUpdate": 1751613755445,
   "repoUrl": "https://github.com/ctron/trustify",
   "entries": {
     "Benchmark": [
@@ -2256,6 +2256,35 @@ window.BENCHMARK_DATA = {
           "url": "https://github.com/ctron/trustify/commit/97c7dd697dce5e25f8f890f935792c98706e2dcb"
         },
         "date": 1751291251543,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Ingest DS3",
+            "value": 8,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "86094767+mrrajan@users.noreply.github.com",
+            "name": "mrrajan",
+            "username": "mrrajan"
+          },
+          "committer": {
+            "email": "ctron@dentrassi.de",
+            "name": "Jens Reimann",
+            "username": "ctron"
+          },
+          "distinct": true,
+          "id": "30c66a4a8d1d647877ae8969a599cc120af0b3ba",
+          "message": "Formatting code blocks\n\nSigned-off-by: mrrajan <86094767+mrrajan@users.noreply.github.com.>",
+          "timestamp": "2025-07-04T06:29:34Z",
+          "tree_id": "316d6a27850215a99dbee3b89787e6d37f4943f3",
+          "url": "https://github.com/ctron/trustify/commit/30c66a4a8d1d647877ae8969a599cc120af0b3ba"
+        },
+        "date": 1751613754607,
         "tool": "customSmallerIsBetter",
         "benches": [
           {
