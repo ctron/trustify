@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1752126789144,
+  "lastUpdate": 1752491199654,
   "repoUrl": "https://github.com/ctron/trustify",
   "entries": {
     "Benchmark": [
@@ -2406,6 +2406,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Ingest DS3",
             "value": 8,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "ctron@dentrassi.de",
+            "name": "Jens Reimann",
+            "username": "ctron"
+          },
+          "committer": {
+            "email": "ctron@dentrassi.de",
+            "name": "Jens Reimann",
+            "username": "ctron"
+          },
+          "distinct": true,
+          "id": "12d9ab389cbd233ca506ea490611502c2cba5273",
+          "message": "fix(fundamental): change response of analyse purl endpoint\n\nSkip returning SBOM specific content as the endpoint should return\nresults for this PURL, not related SBOMs.\n\nRemove duplicates in response. Due to the way the SQL query was\nstructured, it returned duplicate entries.\n\nThis will now return all advisories contributing to this state. It will\nalso skip not_affected and recommended, in addition to fixed.\n\nMaps will also have a stable, sorted order of keys.",
+          "timestamp": "2025-07-14T09:12:17Z",
+          "tree_id": "a07857709cc1a5750645649c7c1d4190c19b2f0c",
+          "url": "https://github.com/ctron/trustify/commit/12d9ab389cbd233ca506ea490611502c2cba5273"
+        },
+        "date": 1752491198944,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Ingest DS3",
+            "value": 7,
             "unit": "s"
           }
         ]
