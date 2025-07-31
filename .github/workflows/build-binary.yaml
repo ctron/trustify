@@ -153,6 +153,8 @@ jobs:
 
       - run: mkdir -p upload
 
+      - run: npm --version
+
       - name: Build | Build
         shell: bash
         env:
