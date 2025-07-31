@@ -22,7 +22,7 @@ members = [
 ]
 
 [workspace.package]
-version = "0.3.5"
+version = "0.0.0-alpha.1"
 edition = "2024"
 publish = false
 license = "Apache-2.0"
@@ -165,8 +165,8 @@ trustify-module-ui = { path = "modules/ui", default-features = false }
 trustify-module-user = { path = "modules/user" }
 trustify-server = { path = "server", default-features = false }
 trustify-test-context = { path = "test-context" }
-trustify-ui = { git = "https://github.com/trustification/trustify-ui.git", branch = "publish/main" }
-#trustify-ui = { git = "https://github.com/ctron/trustify-ui.git", branch = "feature/embed_code_1" }
+#trustify-ui = { git = "https://github.com/trustification/trustify-ui.git", branch = "publish/main" }
+trustify-ui = { git = "https://github.com/ctron/trustify-ui.git", branch = "feature/embed_code_1" }
 
 # These dependencies are active during both the build time and the run time. So they are normal dependencies
 # as well as build-dependencies. However, we can't control feature flags for build dependencies the way we do
