@@ -1,0 +1,4 @@
+/target/
+.trustify/
+/Containerfile
+/data/

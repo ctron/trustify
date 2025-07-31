@@ -13,3 +13,4 @@
 /perf.data*
 /dump.sql
 .ai_history.txt
+/vendor/
