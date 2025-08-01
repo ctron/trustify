@@ -6825,9 +6825,9 @@ dependencies = [
 
 [[package]]
 name = "sectxtlib"
-version = "0.3.1"
+version = "0.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f3903cdffd3ff0a0d53c45ab619b75361c0ed4bed3f794fc7313af18d0b24ec8"
+checksum = "851d3f4eb286938fec9489d4a23f8129870c6beb9653f62447eb76337a6fd24a"
 dependencies = [
  "chrono",
  "iri-string",
@@ -6981,9 +6981,9 @@ dependencies = [
 
 [[package]]
 name = "serde_json"
-version = "1.0.141"
+version = "1.0.142"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "30b9eff21ebe718216c6ec64e1d9ac57087aad11efc64e32002bce4a0d4c03d3"
+checksum = "030fedb782600dcbd6f02d479bf0d817ac3bb40d644745b769d6a96bc3afc5a7"
 dependencies = [
  "indexmap 2.10.0",
  "itoa",
@@ -8879,7 +8879,7 @@ dependencies = [
 [[package]]
 name = "trustify-ui"
 version = "0.1.0"
-source = "git+https://github.com/ctron/trustify-ui.git?branch=feature%2Fembed_code_1#7f40d977bd56b31f5c979ad96a98f6798afd4d2f"
+source = "git+https://github.com/ctron/trustify-ui.git?branch=feature%2Fembed_code_1#bb2d3e1e1de59b74af4589dcc611204c4c4001a5"
 dependencies = [
  "anyhow",
  "base64 0.22.1",
