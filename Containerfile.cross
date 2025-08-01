@@ -1,0 +1,21 @@
+# work around:
+# * https://github.com/cross-rs/cross/issues/1512
+# * https://github.com/rust-lang/git2-rs/issues/1057
+FROM ghcr.io/cross-rs/aarch64-unknown-linux-gnu:edge
+
+ARG CROSS_DEB_ARCH
+
+RUN dpkg --add-architecture $CROSS_DEB_ARCH && \
+    apt-get update && apt-get install --assume-yes libssl-dev:$CROSS_DEB_ARCH libssl-dev
+
+ENV NVM_DIR=/root/.nvm \
+    NODE_VERSION=22.18.0
+
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+
+RUN bash -c "source $NVM_DIR/nvm.sh && nvm install $NODE_VERSION && nvm alias default $NODE_VERSION && nvm use default"
+
+ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
+ENV PATH $PATH:$NVM_DIR/versions/node/v$NODE_VERSION/bin
+
+RUN npm --version
