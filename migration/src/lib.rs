@@ -1,5 +1,7 @@
 pub use sea_orm_migration::prelude::*;
 
+mod data;
+
 mod m0000010_init;
 mod m0000020_add_sbom_group;
 mod m0000030_perf_adv_vuln;
@@ -27,6 +29,7 @@ mod m0001120_sbom_external_node_indexes;
 mod m0001130_gover_cmp;
 mod m0001140_expand_spdx_licenses_function;
 mod m0001150_case_license_text_sbom_id_function;
+mod m0002000_example_data_migration;
 
 pub struct Migrator;
 
@@ -59,8 +62,12 @@ impl MigratorTrait for Migrator {
             Box::new(m0001110_sbom_node_checksum_indexes::Migration),
             Box::new(m0001120_sbom_external_node_indexes::Migration),
             Box::new(m0001130_gover_cmp::Migration),
+<<<<<<< HEAD
             Box::new(m0001140_expand_spdx_licenses_function::Migration),
             Box::new(m0001150_case_license_text_sbom_id_function::Migration),
+=======
+            Box::new(m0001140_example_data_migration::Migration),
+>>>>>>> 3ee17782 (chore: initial PoC impl)
         ]
     }
 }
