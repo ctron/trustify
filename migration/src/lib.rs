@@ -1,5 +1,7 @@
 pub use sea_orm_migration::prelude::*;
 
+mod data;
+
 mod m0000010_init;
 mod m0000020_add_sbom_group;
 mod m0000030_perf_adv_vuln;
@@ -31,6 +33,7 @@ mod m0001160_improve_expand_spdx_licenses_function;
 mod m0001170_non_null_source_document_id;
 mod m0001180_expand_spdx_licenses_with_mappings_function;
 mod m0001190_optimize_product_advisory_query;
+mod m0002000_example_data_migration;
 
 pub struct Migrator;
 
@@ -69,6 +72,7 @@ impl MigratorTrait for Migrator {
             Box::new(m0001170_non_null_source_document_id::Migration),
             Box::new(m0001180_expand_spdx_licenses_with_mappings_function::Migration),
             Box::new(m0001190_optimize_product_advisory_query::Migration),
+            Box::new(m0002000_example_data_migration::Migration),
         ]
     }
 }
