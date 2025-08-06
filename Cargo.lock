@@ -8470,7 +8470,13 @@ name = "trustify-migration"
 version = "0.3.6"
 dependencies = [
  "anyhow",
+ "bytes",
+ "futures-util",
+ "sea-orm",
  "sea-orm-migration",
+ "serde-cyclonedx",
+ "serde_json",
+ "spdx-rs",
  "test-context",
  "test-log",
  "tokio",
@@ -8478,6 +8484,7 @@ dependencies = [
  "trustify-common",
  "trustify-db",
  "trustify-entity",
+ "trustify-module-storage",
  "trustify-test-context",
  "uuid",
 ]
