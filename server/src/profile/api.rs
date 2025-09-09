@@ -148,10 +148,12 @@ mod default {
 #[group(id = "ui")]
 pub struct UiConfig {
     /// Issuer URL used by the UI
-    #[arg(id = "ui-issuer-url", long, env = "UI_ISSUER_URL", default_value_t = ISSUER_URL.to_string())]
+    #[arg(id = "ui-issuer-url", long, env = "UI_ISSUER_URL", default_value_t = ISSUER_URL.to_string()
+    )]
     pub issuer_url: String,
     /// Client ID used by the UI
-    #[arg(id = "ui-client-id", long, env = "UI_CLIENT_ID", default_value_t = FRONTEND_CLIENT_ID.to_string())]
+    #[arg(id = "ui-client-id", long, env = "UI_CLIENT_ID", default_value_t = FRONTEND_CLIENT_ID.to_string()
+    )]
     pub client_id: String,
     /// Scopes to request
     #[arg(id = "ui-scope", long, env = "UI_SCOPE", default_value = "openid")]
@@ -252,28 +254,7 @@ impl InitData {
         // Schedule any DB garbage collection tasks
         schedule_db_tasks(db.clone());
 
-        let storage = match run.storage.storage_strategy {
-            StorageStrategy::Fs => {
-                let storage = run
-                    .storage
-                    .fs_path
-                    .as_ref()
-                    .cloned()
-                    .unwrap_or_else(|| PathBuf::from("./.trustify/storage"));
-                if run.devmode {
-                    create_dir_all(&storage).context(format!(
-                        "Failed to create filesystem storage directory: {:?}",
-                        run.storage.fs_path
-                    ))?;
-                }
-                DispatchBackend::Filesystem(
-                    FileSystemBackend::new(storage, run.storage.compression).await?,
-                )
-            }
-            StorageStrategy::S3 => DispatchBackend::S3(
-                S3Backend::new(run.storage.s3_config, run.storage.compression).await?,
-            ),
-        };
+        let storage = run.storage.into_storage(run.devmode).await?;
 
         let ui = UI {
             version: env!("CARGO_PKG_VERSION").to_string(),
@@ -355,7 +336,7 @@ impl InitData {
                     let _ = embedded_oidc.0.await?;
                     Ok::<_, anyhow::Error>(())
                 }
-                .boxed_local(),
+                    .boxed_local(),
             );
         }
 
@@ -427,11 +408,11 @@ pub(crate) struct Config {
 pub(crate) fn configure(svc: &mut utoipa_actix_web::service_config::ServiceConfig, config: Config) {
     let Config {
         config:
-            ModuleConfig {
-                ingestor,
-                fundamental,
-                ui,
-            },
+        ModuleConfig {
+            ingestor,
+            fundamental,
+            ui,
+        },
         db,
         storage,
         auth,
@@ -458,7 +439,7 @@ pub(crate) fn configure(svc: &mut utoipa_actix_web::service_config::ServiceConfi
                     svc.wrap(middleware::NormalizePath::new(
                         middleware::TrailingSlash::Always,
                     ))
-                    .wrap(new_auth(auth.clone()))
+                        .wrap(new_auth(auth.clone()))
                 })
                 .configure(|svc| {
                     trustify_module_graphql::endpoints::configure(svc, db.clone());
@@ -542,12 +523,12 @@ mod test {
         let context = InitContext::default();
         let run = Run::from_arg_matches(&Run::augment_args(Command::new("cmd")).get_matches_from(
             vec![
-                    "cmd",
-                    "--db-name",
-                    "test",
-                    "--db-port",
-                    &ctx.postgresql.as_ref().expect("database").settings().port.to_string(),
-                ],
+                "cmd",
+                "--db-name",
+                "test",
+                "--db-port",
+                &ctx.postgresql.as_ref().expect("database").settings().port.to_string(),
+            ],
         ))?;
         InitData::new(context, run).await.map(|_| ())
     }
@@ -580,7 +561,7 @@ mod test {
                 .apply_openapi(None, None)
                 .configure(|svc| post_configure(svc, PostConfig { ui })),
         )
-        .await;
+            .await;
 
         // main UI
 
