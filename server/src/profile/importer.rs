@@ -4,10 +4,7 @@ use std::{path::PathBuf, process::ExitCode};
 use trustify_common::{config::Database, db};
 use trustify_infrastructure::{Infrastructure, InfrastructureConfig, InitContext};
 use trustify_module_importer::server::importer;
-use trustify_module_storage::{
-    config::{StorageConfig, StorageStrategy},
-    service::{dispatch::DispatchBackend, fs::FileSystemBackend, s3::S3Backend},
-};
+use trustify_module_storage::{config::StorageConfig, service::dispatch::DispatchBackend};
 
 /// Run the API server
 #[derive(clap::Args, Debug)]

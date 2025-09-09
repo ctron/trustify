@@ -1,6 +1,7 @@
 pub use sea_orm_migration::prelude::*;
 
 mod data;
+use crate::data::MigrationWithData;
 
 mod m0000010_init;
 mod m0000020_add_sbom_group;
@@ -60,7 +61,9 @@ impl MigratorTrait for Migrator {
             Box::new(m0001110_sbom_node_checksum_indexes::Migration),
             Box::new(m0001120_sbom_external_node_indexes::Migration),
             Box::new(m0001130_gover_cmp::Migration),
-            Box::new(m0001140_example_data_migration::Migration),
+            Box::new(MigrationWithData::new(
+                m0001140_example_data_migration::Migration,
+            )),
         ]
     }
 }

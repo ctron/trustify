@@ -8471,6 +8471,7 @@ version = "0.3.6"
 dependencies = [
  "anyhow",
  "bytes",
+ "clap",
  "futures-util",
  "sea-orm",
  "sea-orm-migration",
