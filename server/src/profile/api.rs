@@ -6,9 +6,9 @@ use actix_web::middleware;
 
 use crate::{endpoints, profile::spawn_db_check, sample_data};
 use actix_web::web;
-use anyhow::Context;
 use bytesize::ByteSize;
 use futures::FutureExt;
+use humantime::parse_duration;
 use std::{env, fs::create_dir_all, path::PathBuf, process::ExitCode, sync::Arc, time::Duration};
 use tokio_schedule::{Job, every};
 use trustify_auth::{
@@ -31,10 +31,7 @@ use trustify_infrastructure::{
 use trustify_module_analysis::{config::AnalysisConfig, service::AnalysisService};
 use trustify_module_fundamental::purl::service::PurlService;
 use trustify_module_ingestor::graph::Graph;
-use trustify_module_storage::{
-    config::{StorageConfig, StorageStrategy},
-    service::{dispatch::DispatchBackend, fs::FileSystemBackend, s3::S3Backend},
-};
+use trustify_module_storage::{config::StorageConfig, service::dispatch::DispatchBackend};
 use trustify_module_ui::{UI, endpoints::UiResources};
 use utoipa::openapi::{Info, License};
 
@@ -336,7 +333,7 @@ impl InitData {
                     let _ = embedded_oidc.0.await?;
                     Ok::<_, anyhow::Error>(())
                 }
-                    .boxed_local(),
+                .boxed_local(),
             );
         }
 
@@ -408,11 +405,11 @@ pub(crate) struct Config {
 pub(crate) fn configure(svc: &mut utoipa_actix_web::service_config::ServiceConfig, config: Config) {
     let Config {
         config:
-        ModuleConfig {
-            ingestor,
-            fundamental,
-            ui,
-        },
+            ModuleConfig {
+                ingestor,
+                fundamental,
+                ui,
+            },
         db,
         storage,
         auth,
@@ -439,7 +436,7 @@ pub(crate) fn configure(svc: &mut utoipa_actix_web::service_config::ServiceConfi
                     svc.wrap(middleware::NormalizePath::new(
                         middleware::TrailingSlash::Always,
                     ))
-                        .wrap(new_auth(auth.clone()))
+                    .wrap(new_auth(auth.clone()))
                 })
                 .configure(|svc| {
                     trustify_module_graphql::endpoints::configure(svc, db.clone());
@@ -561,7 +558,7 @@ mod test {
                 .apply_openapi(None, None)
                 .configure(|svc| post_configure(svc, PostConfig { ui })),
         )
-            .await;
+        .await;
 
         // main UI
 
