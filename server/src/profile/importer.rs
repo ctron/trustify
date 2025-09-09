@@ -73,22 +73,7 @@ impl InitData {
             .register("database", spawn_db_check(db.clone())?)
             .await;
 
-        let storage = match run.storage.storage_strategy {
-            StorageStrategy::Fs => {
-                let storage = run
-                    .storage
-                    .fs_path
-                    .as_ref()
-                    .cloned()
-                    .unwrap_or_else(|| PathBuf::from("./.trustify/storage"));
-                DispatchBackend::Filesystem(
-                    FileSystemBackend::new(storage, run.storage.compression).await?,
-                )
-            }
-            StorageStrategy::S3 => DispatchBackend::S3(
-                S3Backend::new(run.storage.s3_config, run.storage.compression).await?,
-            ),
-        };
+        let storage = run.storage.into_storage(false).await?;
 
         Ok(InitData {
             db,
