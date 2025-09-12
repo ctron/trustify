@@ -8495,6 +8495,8 @@ dependencies = [
  "test-log",
  "tokio",
  "tokio-util",
+ "tracing",
+ "tracing-subscriber",
  "trustify-common",
  "trustify-db",
  "trustify-entity",
