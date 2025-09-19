@@ -2,6 +2,7 @@ pub mod embedded;
 
 use anyhow::ensure;
 use migration::Migrator;
+use migration::data::Runner;
 use sea_orm::{ConnectionTrait, Statement};
 use sea_orm_migration::prelude::MigratorTrait;
 use tracing::instrument;
@@ -35,7 +36,7 @@ impl<'a> Database<'a> {
             "Unable to bootstrap database with '--db-url'"
         );
 
-        let url = crate::config::Database {
+        let url = config::Database {
             name: "postgres".into(),
             ..database.clone()
         }
@@ -63,5 +64,9 @@ impl<'a> Database<'a> {
         Database(&db).migrate().await?;
 
         Ok(db)
+    }
+
+    pub async fn data_migrate(&self, runner: Runner) -> Result<(), anyhow::Error> {
+        runner.run::<Migrator>().await
     }
 }
