@@ -4968,6 +4968,7 @@ components:
         - average_score
         - status
         - packages
+        - scores
         properties:
           average_score:
             type: number
@@ -4982,6 +4983,10 @@ components:
             type: array
             items:
               $ref: '#/components/schemas/SbomPackage'
+          scores:
+            type: array
+            items:
+              $ref: '#/components/schemas/Score'
           status:
             type: string
     SbomSummary:
