@@ -8,8 +8,7 @@ use crate::{endpoints, profile::spawn_db_check, sample_data};
 use actix_web::web;
 use bytesize::ByteSize;
 use futures::FutureExt;
-use humantime::parse_duration;
-use std::{env, fs::create_dir_all, path::PathBuf, process::ExitCode, sync::Arc, time::Duration};
+use std::{env, process::ExitCode, sync::Arc, time::Duration};
 use tokio_schedule::{Job, every};
 use trustify_auth::{
     auth::AuthConfigArguments,

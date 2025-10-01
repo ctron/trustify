@@ -64,19 +64,15 @@ impl Migrator {
             .normal(m0001110_sbom_node_checksum_indexes::Migration)
             .normal(m0001120_sbom_external_node_indexes::Migration)
             .normal(m0001130_gover_cmp::Migration)
+            .normal(m0001140_expand_spdx_licenses_function::Migration)
+            .normal(m0001150_case_license_text_sbom_id_function::Migration)
             .data(m0002000_example_data_migration::Migration)
     }
 }
 
 impl MigratorWithData for Migrator {
     fn data_migrations() -> Vec<Box<dyn MigrationTraitWithData>> {
-        Self::migrations()
-            .into_iter()
-            .filter_map(|migration| match migration {
-                Migration::Normal(_) => None,
-                Migration::Data(migration) => Some(migration),
-            })
-            .collect()
+        Self::migrations().only_data()
     }
 }
 
