@@ -3872,7 +3872,9 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "70a646d946d06bedbbc4cac4c218acf4bbf2d87757a784857025f4d447e4e1cd"
 dependencies = [
  "console",
+ "futures-core",
  "portable-atomic",
+ "tokio",
  "unicode-width",
  "unit-prefix",
  "web-time",
@@ -8346,6 +8348,7 @@ dependencies = [
  "sea-orm-migration",
  "sea-query",
  "serde",
+ "serde-cyclonedx",
  "serde_json",
  "spdx-expression",
  "spdx-rs",
@@ -8461,6 +8464,8 @@ dependencies = [
  "clap",
  "futures",
  "futures-util",
+ "humantime",
+ "indicatif",
  "sea-orm",
  "sea-orm-migration",
  "serde-cyclonedx",
