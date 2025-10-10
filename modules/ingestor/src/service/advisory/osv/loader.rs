@@ -1,3 +1,4 @@
+use crate::service::advisory::osv::extract_vulnerability_ids;
 use crate::{
     graph::{
         Graph,
@@ -6,12 +7,13 @@ use crate::{
             advisory_vulnerability::AdvisoryVulnerabilityContext,
             version::{Version, VersionInfo, VersionSpec},
         },
+        cvss::ScoreCreator,
         purl::creator::PurlCreator,
     },
     model::IngestResult,
     service::{
         Error, Warnings,
-        advisory::osv::{prefix::get_well_known_prefixes, translate},
+        advisory::osv::{extract_scores, prefix::get_well_known_prefixes, translate},
     },
 };
 use osv::schema::{Ecosystem, Event, Range, RangeType, ReferenceType, SeverityType, Vulnerability};
@@ -48,14 +50,6 @@ impl<'g> OsvLoader<'g> {
 
         let tx = self.graph.db.begin().await?;
 
-        let cve_ids = osv.aliases.iter().flat_map(|aliases| {
-            aliases
-                .iter()
-                .filter(|e| e.starts_with("CVE-"))
-                .cloned()
-                .collect::<Vec<_>>()
-        });
-
         let information = AdvisoryInformation {
             id: osv.id.clone(),
             title: osv.summary.clone(),
@@ -78,8 +72,11 @@ impl<'g> OsvLoader<'g> {
         }
 
         let mut purl_creator = PurlCreator::new();
+        let mut score_creator = ScoreCreator::new(advisory.advisory.id);
 
-        for cve_id in cve_ids {
+        extract_scores(&osv, &mut score_creator);
+
+        for cve_id in extract_vulnerability_ids(&osv) {
             self.graph.ingest_vulnerability(&cve_id, (), &tx).await?;
 
             let advisory_vuln = advisory
@@ -281,6 +278,7 @@ impl<'g> OsvLoader<'g> {
         }
 
         purl_creator.create(&tx).await?;
+        score_creator.create(&tx).await?;
 
         tx.commit().await?;
 
