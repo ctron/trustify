@@ -36,7 +36,8 @@ mod m0001160_improve_expand_spdx_licenses_function;
 mod m0001170_non_null_source_document_id;
 mod m0001180_expand_spdx_licenses_with_mappings_function;
 mod m0001190_optimize_product_advisory_query;
-mod m0002000_example_data_migration;
+mod m0002000_example_sbom_data_migration;
+mod m0002010_example_advisory_data_migration;
 
 pub struct Migrator;
 
@@ -74,7 +75,8 @@ impl Migrator {
             .normal(m0001170_non_null_source_document_id::Migration)
             .normal(m0001180_expand_spdx_licenses_with_mappings_function::Migration)
             .normal(m0001190_optimize_product_advisory_query::Migration)
-            .data(m0002000_example_data_migration::Migration)
+            .data(m0002000_example_sbom_data_migration::Migration)
+            .data(m0002010_example_advisory_data_migration::Migration)
     }
 }
 
