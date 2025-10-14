@@ -2083,7 +2083,7 @@ source = "git+https://github.com/trustification/csaf-rs#17620a225744b4a18845d4f7
 dependencies = [
  "chrono",
  "cpe",
- "cvss",
+ "cvss 2.1.1",
  "packageurl",
  "serde",
  "serde_json",
@@ -2186,6 +2186,16 @@ dependencies = [
  "serde_json",
  "time",
  "uuid",
+]
+
+[[package]]
+name = "cvss"
+version = "0.1.0"
+source = "git+https://github.com/dejanb/cvss#aadb35f033d124da099bf74fb1383fc30a62c163"
+dependencies = [
+ "serde",
+ "serde_json",
+ "strum 0.26.3",
 ]
 
 [[package]]
@@ -8400,7 +8410,7 @@ dependencies = [
  "anyhow",
  "async-graphql",
  "cpe",
- "cvss",
+ "cvss 0.1.0",
  "deepsize",
  "log",
  "rstest",
@@ -8709,7 +8719,7 @@ dependencies = [
  "cpe",
  "csaf",
  "cve",
- "cvss",
+ "cvss 0.1.0",
  "hex",
  "humantime",
  "jsn",
