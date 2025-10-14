@@ -1,5 +1,3 @@
-use crate::graph::cvss::ScoreCreator;
-use crate::service::advisory::cve::extract_scores;
 use crate::{
     graph::{
         Graph,
@@ -7,10 +5,14 @@ use crate::{
             AdvisoryInformation, AdvisoryVulnerabilityInformation,
             version::{Version, VersionInfo, VersionSpec},
         },
+        cvss::ScoreCreator,
         vulnerability::VulnerabilityInformation,
     },
     model::IngestResult,
-    service::{Error, Warnings, advisory::cve::divination::divine_purl},
+    service::{
+        Error, Warnings,
+        advisory::cve::{divination::divine_purl, extract_scores},
+    },
 };
 use cve::{
     Cve, Timestamp,

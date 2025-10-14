@@ -77,11 +77,11 @@ impl<'g> OsvLoader<'g> {
         extract_scores(&osv, &mut score_creator);
 
         for cve_id in extract_vulnerability_ids(&osv) {
-            self.graph.ingest_vulnerability(&cve_id, (), &tx).await?;
+            self.graph.ingest_vulnerability(cve_id, (), &tx).await?;
 
             let advisory_vuln = advisory
                 .link_to_vulnerability(
-                    &cve_id,
+                    cve_id,
                     Some(AdvisoryVulnerabilityInformation {
                         title: osv.summary.clone(),
                         summary: osv.summary.clone(),
