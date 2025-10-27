@@ -36,6 +36,7 @@ mod m0001160_improve_expand_spdx_licenses_function;
 mod m0001170_non_null_source_document_id;
 mod m0001180_expand_spdx_licenses_with_mappings_function;
 mod m0001190_optimize_product_advisory_query;
+mod m0002000_add_sbom_properties;
 mod m0002010_add_advisory_scores;
 
 pub trait MigratorExt: Send {
@@ -89,6 +90,7 @@ impl MigratorExt for Migrator {
             .normal(m0001170_non_null_source_document_id::Migration)
             .normal(m0001180_expand_spdx_licenses_with_mappings_function::Migration)
             .normal(m0001190_optimize_product_advisory_query::Migration)
+            .data(m0002000_add_sbom_properties::Migration)
             .data(m0002010_add_advisory_scores::Migration)
     }
 }
