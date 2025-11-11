@@ -472,27 +472,27 @@ async fn test_tc2578(
 }
 
 #[test_context(TrustifyContext)]
-#[test(actix_web::test)]
-async fn tc_3073_1(ctx: &TrustifyContext) -> Result<(), anyhow::Error> {
+#[test_log::test(actix_web::test)]
+async fn tc_3170_1(ctx: &TrustifyContext) -> Result<(), anyhow::Error> {
     let app = caller(ctx).await?;
 
     ctx.ingest_documents([
         "cyclonedx/rh/latest_filters/container/quay_builder_qemu_rhcos_rhel8_2025-02-24/quay-builder-qemu-rhcos-rhel-8-product.json",
         "cyclonedx/rh/latest_filters/container/quay_builder_qemu_rhcos_rhel8_2025-02-24/quay-builder-qemu-rhcos-rhel-8-image-index.json",
         "cyclonedx/rh/latest_filters/container/quay_builder_qemu_rhcos_rhel8_2025-02-24/quay-builder-qemu-rhcos-rhel-8-amd64.json",
-          ])
+    ])
         .await?;
 
     // purl partial search
-    let uri: String = format!(
-        "/api/v2/analysis/component?q={}&ancestors=10",
-        urlencoding::encode("purl~pkg:oci/quay-builder-qemu-rhcos-rhel8")
-    );
-    let request: Request = TestRequest::get().uri(&uri).to_request();
-    let response: Value = app.call_and_read_body_json(request).await;
-    assert_eq!(8, response["total"]);
+    let response = app
+        .req(Req {
+            what: What::Q("purl~pkg:oci/quay-builder-qemu-rhcos-rhel8"),
+            ancestors: Some(10),
+            ..Default::default()
+        })
+        .await?;
 
-    println!("{:#?}", response);
+    assert_eq!(8, response["total"]);
 
     assert!(response["items"].contains_subset(json!([
         {
@@ -572,8 +572,8 @@ async fn tc_3073_1(ctx: &TrustifyContext) -> Result<(), anyhow::Error> {
 }
 
 #[test_context(TrustifyContext)]
-#[test(actix_web::test)]
-async fn tc_3073_2(ctx: &TrustifyContext) -> Result<(), anyhow::Error> {
+#[test_log::test(actix_web::test)]
+async fn tc_3170_3(ctx: &TrustifyContext) -> Result<(), anyhow::Error> {
     let app = caller(ctx).await?;
 
     ctx.ingest_documents([
@@ -583,32 +583,30 @@ async fn tc_3073_2(ctx: &TrustifyContext) -> Result<(), anyhow::Error> {
     ])
         .await?;
 
-    // purl partial search
-    let uri: String = format!(
-        "/api/v2/analysis/latest/component?q={}&ancestors=10",
-        urlencoding::encode("purl~pkg:oci/quay-builder-qemu-rhcos-rhel8")
-    );
-    let request: Request = TestRequest::get().uri(&uri).to_request();
-    let response: Value = app.call_and_read_body_json(request).await;
-    println!("{:#?}", response);
-    assert_eq!(7, response["total"]);
+    let req = Req {
+        latest: true,
+        what: What::Q("purl~pkg:oci/quay-builder-qemu-rhcos-rhel8"),
+        ancestors: Some(10),
+        ..Default::default()
+    };
 
-    ctx.ingest_documents([
-        "cyclonedx/rh/latest_filters/container/quay_builder_qemu_rhcos_rhel8_2025-04-02/quay-builder-qemu-rhcos-rhel8-v3.14.0-4-binary.json",
-        "cyclonedx/rh/latest_filters/container/quay_builder_qemu_rhcos_rhel8_2025-04-02/quay-builder-qemu-rhcos-rhel8-v3.14.0-4-index.json",
-        "cyclonedx/rh/latest_filters/container/quay_builder_qemu_rhcos_rhel8_2025-04-02/quay-v3.14.0-product.json",
-    ])
+    let response = app.req(req).await?;
+
+    println!("{response:#?}");
+    assert_eq!(7, response["total"]);
+    // same request, but latest
+
+    let latest_response = app
+        .req(Req {
+            latest: true,
+            ..req
+        })
         .await?;
 
-    // purl partial search
-    let uri: String = format!(
-        "/api/v2/analysis/latest/component?q={}&ancestors=10",
-        urlencoding::encode("purl~pkg:oci/quay-builder-qemu-rhcos-rhel8")
-    );
-    let request: Request = TestRequest::get().uri(&uri).to_request();
-    let response: Value = app.call_and_read_body_json(request).await;
-    println!("{:#?}", response);
-    assert_eq!(7, response["total"]);
+    // must yield the same result
+
+    println!("{latest_response:#?}");
+    assert_eq!(response, latest_response);
 
     Ok(())
 }
