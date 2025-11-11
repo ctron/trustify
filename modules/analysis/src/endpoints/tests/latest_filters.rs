@@ -470,3 +470,145 @@ async fn test_tc2578(
 
     Ok(())
 }
+
+#[test_context(TrustifyContext)]
+#[test(actix_web::test)]
+async fn tc_3073_1(ctx: &TrustifyContext) -> Result<(), anyhow::Error> {
+    let app = caller(ctx).await?;
+
+    ctx.ingest_documents([
+        "cyclonedx/rh/latest_filters/container/quay_builder_qemu_rhcos_rhel8_2025-02-24/quay-builder-qemu-rhcos-rhel-8-product.json",
+        "cyclonedx/rh/latest_filters/container/quay_builder_qemu_rhcos_rhel8_2025-02-24/quay-builder-qemu-rhcos-rhel-8-image-index.json",
+        "cyclonedx/rh/latest_filters/container/quay_builder_qemu_rhcos_rhel8_2025-02-24/quay-builder-qemu-rhcos-rhel-8-amd64.json",
+          ])
+        .await?;
+
+    // purl partial search
+    let uri: String = format!(
+        "/api/v2/analysis/component?q={}&ancestors=10",
+        urlencoding::encode("purl~pkg:oci/quay-builder-qemu-rhcos-rhel8")
+    );
+    let request: Request = TestRequest::get().uri(&uri).to_request();
+    let response: Value = app.call_and_read_body_json(request).await;
+    assert_eq!(8, response["total"]);
+
+    println!("{:#?}", response);
+
+    assert!(response["items"].contains_subset(json!([
+        {
+            "name": "quay/quay-builder-qemu-rhcos-rhel8",
+            "published": "2025-02-24 03:50:33+00",
+            "ancestors": [
+                {
+                    "name": "quay/quay-builder-qemu-rhcos-rhel8",
+                    "relationship": "describes",
+                    "published": "2025-02-24 03:50:33+00",
+                }
+            ]
+        },
+        {
+            "name": "quay/quay-builder-qemu-rhcos-rhel8",
+            "published": "2025-02-24 03:47:02+00",
+            "ancestors": [
+                {
+                    "name": "quay/quay-builder-qemu-rhcos-rhel8",
+                    "relationship": "describes",
+                    "published": "2025-02-24 03:47:02+00",
+                }
+            ]
+        },
+        {
+            "name": "quay/quay-builder-qemu-rhcos-rhel8",
+            "published": "2025-02-24 03:44:11+00",
+            "ancestors": [
+                {
+                    "name": "Red Hat Quay 3",
+                    "published": "2025-02-24 03:44:11+00",
+                    "relationship": "generates",
+                    "cpe": [
+                        "cpe:/a:redhat:quay:3:*:el8:*"
+                    ],
+                    "ancestors": [
+                        {
+                            "name": "Red Hat Quay 3",
+                            "published": "2025-02-24 03:44:11+00",
+                            "relationship": "describes",
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "quay/quay-builder-qemu-rhcos-rhel8",
+            "published": "2025-02-24 03:50:33+00",
+            "ancestors": [
+                {
+                    "name": "quay/quay-builder-qemu-rhcos-rhel8",
+                    "published": "2025-02-24 03:44:11+00",
+                    "relationship": "package",
+                    "ancestors": [
+                        {
+                            "name": "Red Hat Quay 3",
+                            "published": "2025-02-24 03:44:11+00",
+                            "relationship": "generates",
+                            "cpe": [
+                                "cpe:/a:redhat:quay:3:*:el8:*"
+                            ],
+                            "ancestors": [
+                                {
+                                    "name": "Red Hat Quay 3",
+                                    "published": "2025-02-24 03:44:11+00",
+                                    "relationship": "describes",
+                                }
+                            ]
+                        }
+                    ],
+                }
+            ]
+        }
+    ])));
+
+    Ok(())
+}
+
+#[test_context(TrustifyContext)]
+#[test(actix_web::test)]
+async fn tc_3073_2(ctx: &TrustifyContext) -> Result<(), anyhow::Error> {
+    let app = caller(ctx).await?;
+
+    ctx.ingest_documents([
+        "cyclonedx/rh/latest_filters/container/quay_builder_qemu_rhcos_rhel8_2025-02-24/quay-builder-qemu-rhcos-rhel-8-product.json",
+        "cyclonedx/rh/latest_filters/container/quay_builder_qemu_rhcos_rhel8_2025-02-24/quay-builder-qemu-rhcos-rhel-8-image-index.json",
+        "cyclonedx/rh/latest_filters/container/quay_builder_qemu_rhcos_rhel8_2025-02-24/quay-builder-qemu-rhcos-rhel-8-amd64.json",
+    ])
+        .await?;
+
+    // purl partial search
+    let uri: String = format!(
+        "/api/v2/analysis/latest/component?q={}&ancestors=10",
+        urlencoding::encode("purl~pkg:oci/quay-builder-qemu-rhcos-rhel8")
+    );
+    let request: Request = TestRequest::get().uri(&uri).to_request();
+    let response: Value = app.call_and_read_body_json(request).await;
+    println!("{:#?}", response);
+    assert_eq!(7, response["total"]);
+
+    ctx.ingest_documents([
+        "cyclonedx/rh/latest_filters/container/quay_builder_qemu_rhcos_rhel8_2025-04-02/quay-builder-qemu-rhcos-rhel8-v3.14.0-4-binary.json",
+        "cyclonedx/rh/latest_filters/container/quay_builder_qemu_rhcos_rhel8_2025-04-02/quay-builder-qemu-rhcos-rhel8-v3.14.0-4-index.json",
+        "cyclonedx/rh/latest_filters/container/quay_builder_qemu_rhcos_rhel8_2025-04-02/quay-v3.14.0-product.json",
+    ])
+        .await?;
+
+    // purl partial search
+    let uri: String = format!(
+        "/api/v2/analysis/latest/component?q={}&ancestors=10",
+        urlencoding::encode("purl~pkg:oci/quay-builder-qemu-rhcos-rhel8")
+    );
+    let request: Request = TestRequest::get().uri(&uri).to_request();
+    let response: Value = app.call_and_read_body_json(request).await;
+    println!("{:#?}", response);
+    assert_eq!(7, response["total"]);
+
+    Ok(())
+}

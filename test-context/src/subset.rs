@@ -70,4 +70,61 @@ mod test {
         let actual = json!([1, 2, 3]);
         assert!(!actual.contains_subset(json!([0])));
     }
+
+    #[test]
+    fn test_array_subset_deep() {
+        let actual = json!([
+            {
+                "name": "A",
+                "children": ["A.1", "A.2", "A.3"]
+            },
+            {
+                "name": "B",
+                "children": [
+                    {
+                        "name": "B.1",
+                        "children": ["B.1.1", "B.1.2", "B.1.3"],
+                    },
+                    {
+                        "name": "B.2",
+                        "children": [
+                            {"name": "B.2.1"},
+                            {"name": "B.2.2"},
+                            {"name": "B.2.3"},
+                        ],
+                    },
+                    {
+                        "name": "B.3",
+                        "children": ["B.3.1", "B.3.2", "B.3.3"],
+                    },
+                ]
+            },
+            {
+                "name": "C",
+                "children": ["C.1", "C.2", "C.3"]
+            }
+        ]);
+
+        assert!(actual.contains_subset(json!([
+            {
+                "name": "A",
+                "children": ["A.2"],
+            },
+            {
+                "name": "B",
+                "children": [
+                    {
+                        "name": "B.2",
+                        "children": [
+                            {"name": "B.2.2"},
+                        ],
+                    }
+                ]
+            },
+            {
+                "name": "C",
+                "children": ["C.2"],
+            }
+        ])))
+    }
 }

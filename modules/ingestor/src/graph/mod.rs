@@ -61,8 +61,9 @@ impl Graph {
         T: Send,
         F: AsyncFnOnce(String) -> Result<Option<T>, error::Error>,
     {
+        let id = Uuid::now_v7();
         let doc_model = source_document::ActiveModel {
-            id: Default::default(),
+            id: Set(id),
             sha256: Set(digests.sha256.encode_hex()),
             sha384: Set(digests.sha384.encode_hex()),
             sha512: Set(digests.sha512.encode_hex()),
@@ -80,7 +81,7 @@ impl Graph {
             .await;
 
         match result {
-            Ok(doc) => Ok(CreateOutcome::Created(doc.last_insert_id)),
+            Ok(_doc) => Ok(CreateOutcome::Created(id)),
             Err(TransactionError::Transaction(DbErr::Query(err)))
                 if err
                     .to_string()
