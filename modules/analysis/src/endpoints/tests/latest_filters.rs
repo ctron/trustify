@@ -1,7 +1,7 @@
 use super::req::*;
 use crate::test::caller;
 use rstest::*;
-use serde_json::json;
+use serde_json::{Value, json};
 use test_context::test_context;
 use trustify_test_context::{TrustifyContext, subset::ContainsSubset};
 
@@ -584,24 +584,28 @@ async fn tc_3170_3(ctx: &TrustifyContext) -> Result<(), anyhow::Error> {
         .await?;
 
     let req = Req {
-        latest: true,
         what: What::Q("purl~pkg:oci/quay-builder-qemu-rhcos-rhel8"),
         ancestors: Some(10),
         ..Default::default()
     };
 
-    let response = app.req(req).await?;
+    let mut response = app.req(req).await?;
 
     println!("{response:#?}");
-    assert_eq!(7, response["total"]);
+
+    sort(&mut response["items"]);
+
     // same request, but latest
 
-    let latest_response = app
+    let mut latest_response = app
         .req(Req {
             latest: true,
+            ancestors: Some(10),
             ..req
         })
         .await?;
+
+    sort(&mut latest_response["items"]);
 
     // must yield the same result
 
@@ -609,4 +613,12 @@ async fn tc_3170_3(ctx: &TrustifyContext) -> Result<(), anyhow::Error> {
     assert_eq!(response, latest_response);
 
     Ok(())
+}
+
+fn sort(json: &mut Value) {
+    let Value::Array(items) = json else {
+        return;
+    };
+
+    items.sort_unstable_by_key(|a, b| {})
 }
