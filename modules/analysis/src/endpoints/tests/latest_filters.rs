@@ -574,6 +574,8 @@ async fn tc_3170_1(ctx: &TrustifyContext) -> Result<(), anyhow::Error> {
 #[test_context(TrustifyContext)]
 #[test_log::test(actix_web::test)]
 async fn tc_3170_3(ctx: &TrustifyContext) -> Result<(), anyhow::Error> {
+    use std::io::Write;
+
     let app = caller(ctx).await?;
 
     ctx.ingest_documents([
@@ -589,36 +591,113 @@ async fn tc_3170_3(ctx: &TrustifyContext) -> Result<(), anyhow::Error> {
         ..Default::default()
     };
 
-    let mut response = app.req(req).await?;
-
-    println!("{response:#?}");
-
-    sort(&mut response["items"]);
-
-    // same request, but latest
+    // request latest
 
     let mut latest_response = app
         .req(Req {
             latest: true,
-            ancestors: Some(10),
             ..req
         })
         .await?;
 
     sort(&mut latest_response["items"]);
 
+    writeln!(std::fs::File::create("latest.txt")?, "{latest_response:#?}")?;
+
+    // request all
+
+    let mut response = app
+        .req(Req {
+            latest: false,
+            ..req
+        })
+        .await?;
+
+    sort(&mut response["items"]);
+
+    writeln!(std::fs::File::create("all.txt")?, "{response:#?}")?;
+
     // must yield the same result
 
-    println!("{latest_response:#?}");
     assert_eq!(response, latest_response);
 
     Ok(())
 }
 
+#[test_context(TrustifyContext)]
+#[test(actix_web::test)]
+async fn tc_3170_4(ctx: &TrustifyContext) -> Result<(), anyhow::Error> {
+    use std::io::Write;
+
+    let app = caller(ctx).await?;
+
+    ctx.ingest_documents([
+        "cyclonedx/rh/latest_filters/container/quay_builder_qemu_rhcos_rhel8_2025-02-24/quay-builder-qemu-rhcos-rhel-8-product.json",
+        "cyclonedx/rh/latest_filters/container/quay_builder_qemu_rhcos_rhel8_2025-02-24/quay-builder-qemu-rhcos-rhel-8-image-index.json",
+        "cyclonedx/rh/latest_filters/container/quay_builder_qemu_rhcos_rhel8_2025-02-24/quay-builder-qemu-rhcos-rhel-8-amd64.json",
+    ])
+        .await?;
+
+    let req = Req {
+        latest: false,
+
+        ancestors: Some(10),
+        ..Default::default()
+    };
+
+    // request full
+
+    let mut r1 = app
+        .req(Req {
+            loc: Loc::Q(&format!("purl~{}", escape_q("pkg:oci/quay-builder-qemu-rhcos-rhel8@sha256%3Ab91aec3d3f9cf8a4204e6e13e27035802693a8517b14e59db2535fe789e7a33e?arch=ppc64le&os=linux&repository_url=registry.access.redhat.com%2Fquay%2Fquay-builder-qemu-rhcos-rhel8&tag=v3.12.8-1"))),
+            ..req
+        })
+        .await?;
+
+    sort(&mut r1["items"]);
+
+    writeln!(std::fs::File::create("full.txt")?, "{r1:#?}")?;
+
+    // request partial
+
+    let mut r2 = app
+        .req(Req {
+            loc: Loc::Q("purl~pkg:oci/quay-builder-qemu-rhcos-rhel8"),
+            ..req
+        })
+        .await?;
+
+    sort(&mut r2["items"]);
+
+    writeln!(std::fs::File::create("partial.txt")?, "{r2:#?}")?;
+
+    // must yield the same result
+
+    assert_eq!(r1, r2);
+
+    Ok(())
+}
+
+fn escape_q(q: impl AsRef<str>) -> String {
+    let q = q.as_ref();
+
+    q.replace('\\', "\\\\").replace('&', "\\&")
+}
+
+/// sort all entries by node_id. This includes recursive sorting of ancestors/descendants.
 fn sort(json: &mut Value) {
     let Value::Array(items) = json else {
         return;
     };
 
-    items.sort_unstable_by_key(|a, b| {})
+    // sort list
+
+    items.sort_unstable_by(|a, b| a["node_id"].as_str().cmp(&b["node_id"].as_str()));
+
+    // now sort child entries
+
+    for item in items {
+        sort(&mut item["ancestors"]);
+        sort(&mut item["descendants"]);
+    }
 }
