@@ -19,7 +19,9 @@ use sea_orm::{
     ColumnTrait, ConnectionTrait, DatabaseBackend, DbErr, EntityOrSelect, EntityTrait,
     FromQueryResult, QueryFilter, QuerySelect, QueryTrait, RelationTrait, Select, Statement,
 };
-use sea_query::{Alias, Cond, Expr, JoinType, PostgresQueryBuilder, Query, SelectStatement};
+use sea_query::{
+    Alias, Cond, Condition, Expr, JoinType, PostgresQueryBuilder, Query, SelectStatement,
+};
 use serde_json::Value;
 use std::{
     collections::{HashMap, HashSet, hash_map::Entry},
@@ -43,7 +45,8 @@ use trustify_entity::{
     relationship::Relationship,
     sbom, sbom_external_node,
     sbom_external_node::ExternalType,
-    sbom_node, sbom_package, sbom_package_cpe_ref, sbom_package_purl_ref, versioned_purl,
+    sbom_node, sbom_node_checksum, sbom_package, sbom_package_cpe_ref, sbom_package_purl_ref,
+    versioned_purl,
 };
 use uuid::Uuid;
 
@@ -752,16 +755,20 @@ impl InnerService {
         connection: &C,
         // TODO: distinct_sbom_ids: impl IntoIterator<Item = impl AsRef<str> + Debug>,
         distinct_sbom_ids: &[impl AsRef<str> + Debug],
-        seen_sbom_ids: &mut HashSet<String>,
+        seen_sbom_ids: &mut HashSet<Uuid>,
     ) -> Result<Vec<(String, Arc<PackageGraph>)>, Error> {
         let mut results = Vec::new();
 
         for distinct_sbom_id in distinct_sbom_ids {
             let distinct_sbom_id = distinct_sbom_id.as_ref();
+
+            let distinct_sbom_id_uuid =
+                Uuid::parse_str(distinct_sbom_id).map_err(IdError::InvalidUuid)?;
+
             log::debug!("loading sbom: {distinct_sbom_id}");
 
             // if we can insert into the seen map, we need to process...
-            if !seen_sbom_ids.insert(distinct_sbom_id.to_string()) {
+            if !seen_sbom_ids.insert(distinct_sbom_id_uuid) {
                 // ... otherwise, we already did and can move on.
                 log::debug!("Skipping duplicate SBOM ID: {distinct_sbom_id}");
                 continue;
@@ -773,35 +780,44 @@ impl InnerService {
                 self.load_graph(connection, distinct_sbom_id).await?,
             ));
 
-            // at this stage we just have sbom_id string, so have to convert back to uuid
-            let distinct_sbom_id_uuid =
-                Uuid::parse_str(distinct_sbom_id).map_err(IdError::InvalidUuid)?;
+            // find all sbom_node_checksum for all checksums we have, except our own (or known)
+
+            let mut resolved = resolve_type_rh_sboms(
+                distinct_sbom_id_uuid,
+                connection,
+                seen_sbom_ids.iter().map(|id| *id),
+            )
+            .await?;
+
+            log::info!("Resolved {} SBOMs by checksum", resolved.len());
 
             // select all related external nodes
-            let external_sboms = sbom_external_node::Entity::find()
+            let external_nodes = sbom_external_node::Entity::find()
                 .filter(sbom_external_node::Column::SbomId.eq(distinct_sbom_id_uuid))
                 .all(connection)
                 .await?;
 
             log::debug!(
-                "Found {} external nodes (for SBOM: {distinct_sbom_id_uuid})",
-                external_sboms.len()
+                "Found {} external descendant nodes (for SBOM: {distinct_sbom_id_uuid})",
+                external_nodes.len()
             );
 
-            let mut resolved = Vec::new();
-
             // resolve and load externally referenced sboms
-            for external_sbom in &external_sboms {
+            for external_node in &external_nodes {
                 log::debug!(
                     "resolving external: {}/{}",
-                    external_sbom.sbom_id,
-                    external_sbom.node_id
+                    external_node.sbom_id,
+                    external_node.node_id
                 );
                 let resolved_external_sbom =
-                    resolve_external_sbom(&external_sbom.node_id, connection).await?;
+                    resolve_external_sbom(&external_node.node_id, connection).await?;
 
                 let Some(resolved_external_sbom) = resolved_external_sbom else {
-                    log::warn!("Cannot find external sbom {}", external_sbom.node_id);
+                    log::warn!(
+                        "Cannot find external node {} / {}",
+                        external_node.sbom_id,
+                        external_node.node_id
+                    );
                     continue;
                 };
 
@@ -828,6 +844,45 @@ impl InnerService {
 
         Ok(results)
     }
+}
+
+/// resolve all ancestor and descendant SBOMs using the RH type
+///
+/// RH external nodes are joined by using the checksum/digest/hash. This is performed by the
+/// [`super::resolve_rh_external_sbom_ancestors`] function.
+async fn resolve_type_rh_sboms(
+    sbom_id: Uuid,
+    connection: &impl ConnectionTrait,
+    seen_sbom_ids: impl IntoIterator<Item = Uuid>,
+) -> Result<Vec<String>, Error> {
+    let other = Alias::new("other");
+    Ok(sbom_node_checksum::Entity::find()
+        .select_only()
+        .column_as(
+            Expr::col((other.clone(), sbom_node_checksum::Column::SbomId)),
+            "sbom_id",
+        )
+        .distinct()
+        .filter(sbom_node_checksum::Column::SbomId.eq(sbom_id))
+        .join_as(
+            JoinType::Join,
+            sbom_node_checksum::Relation::SelfRef.def(),
+            other.clone(),
+        )
+        .filter(
+            Condition::all()
+                .add(Expr::col((other.clone(), sbom_node_checksum::Column::SbomId)).ne(sbom_id))
+                .add(Expr::cust_with_values(
+                    r#""other"."sbom_id" <> ALL($1)"#,
+                    [Vec::from_iter(seen_sbom_ids.into_iter())],
+                )),
+        )
+        .into_tuple::<Uuid>()
+        .all(connection)
+        .await?
+        .into_iter()
+        .map(|id| id.to_string())
+        .collect())
 }
 
 // These are the columns and translation rules with which we filter

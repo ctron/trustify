@@ -179,6 +179,7 @@ async fn resolve_external_sbom<C: ConnectionTrait>(
                 }))
         }
         ExternalType::RedHatProductComponent => {
+            // TODO: we don't need this if we used sbom_node_checksum to look them up before
             // for RH variations we assume the sbom_external_node_ref is the package checksum
             // which is used on sbom_node_checksum to lookup related value then
             // perform another lookup on sbom_node_checksum (matching by value) to find resultant

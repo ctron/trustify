@@ -626,6 +626,7 @@ async fn tc_3170_3(ctx: &TrustifyContext) -> Result<(), anyhow::Error> {
 
 #[test_context(TrustifyContext)]
 #[test(actix_web::test)]
+#[ignore = "Not a real test"]
 async fn tc_3170_4(ctx: &TrustifyContext) -> Result<(), anyhow::Error> {
     use std::io::Write;
 
