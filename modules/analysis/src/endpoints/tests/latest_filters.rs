@@ -361,6 +361,8 @@ async fn test_tc2677(
     Ok(())
 }
 
+/// Ensure that a partial PURL match, when using the "by key" endpoint does not return partial
+/// matches for either latest or non-latest endpoints.
 #[test_context(TrustifyContext)]
 #[rstest]
 #[case( // non-latest
@@ -625,7 +627,7 @@ async fn tc_3170_3(ctx: &TrustifyContext) -> Result<(), anyhow::Error> {
 }
 
 #[test_context(TrustifyContext)]
-#[test(actix_web::test)]
+#[test_log::test(actix_web::test)]
 #[ignore = "Not a real test"]
 async fn tc_3170_4(ctx: &TrustifyContext) -> Result<(), anyhow::Error> {
     use std::io::Write;
@@ -650,7 +652,7 @@ async fn tc_3170_4(ctx: &TrustifyContext) -> Result<(), anyhow::Error> {
 
     let mut r1 = app
         .req(Req {
-            loc: Loc::Q(&format!("purl~{}", escape_q("pkg:oci/quay-builder-qemu-rhcos-rhel8@sha256%3Ab91aec3d3f9cf8a4204e6e13e27035802693a8517b14e59db2535fe789e7a33e?arch=ppc64le&os=linux&repository_url=registry.access.redhat.com%2Fquay%2Fquay-builder-qemu-rhcos-rhel8&tag=v3.12.8-1"))),
+            what: What::Q(&format!("purl~{}", escape_q("pkg:oci/quay-builder-qemu-rhcos-rhel8@sha256%3Ab91aec3d3f9cf8a4204e6e13e27035802693a8517b14e59db2535fe789e7a33e?arch=ppc64le&os=linux&repository_url=registry.access.redhat.com%2Fquay%2Fquay-builder-qemu-rhcos-rhel8&tag=v3.12.8-1"))),
             ..req
         })
         .await?;
@@ -663,7 +665,7 @@ async fn tc_3170_4(ctx: &TrustifyContext) -> Result<(), anyhow::Error> {
 
     let mut r2 = app
         .req(Req {
-            loc: Loc::Q("purl~pkg:oci/quay-builder-qemu-rhcos-rhel8"),
+            what: What::Q("purl~pkg:oci/quay-builder-qemu-rhcos-rhel8"),
             ..req
         })
         .await?;

@@ -628,6 +628,9 @@ impl AnalysisService {
     }
 
     /// check if a node in the graph matches the provided query
+    ///
+    /// **NOTE:** this has to be aligned with [`InnerService::load_latest_graphs_query`] and
+    /// [`InnerService::load_graphs_query`].
     fn filter(graph: &Graph<graph::Node, Relationship>, query: &GraphQuery, i: NodeIndex) -> bool {
         match query {
             GraphQuery::Component(ComponentReference::Id(component_id)) => graph
@@ -638,9 +641,7 @@ impl AnalysisService {
                 .is_some_and(|node| node.name.eq(component_name)),
             GraphQuery::Component(ComponentReference::Purl(purl)) => {
                 graph.node_weight(i).is_some_and(|node| match node {
-                    graph::Node::Package(package) => package.purl.iter().any(|package_purl| {
-                        package_purl.to_string().starts_with(&purl.to_string())
-                    }),
+                    graph::Node::Package(package) => package.purl.contains(purl),
                     _ => false,
                 })
             }

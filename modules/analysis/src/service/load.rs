@@ -281,6 +281,8 @@ impl AnalysisService {
 
 impl InnerService {
     /// Take a [`GraphQuery`] and load all required SBOMs
+    ///
+    /// **NOTE:** This has to be aligned with [`AnalysisService::filter`]
     #[instrument(skip(self, connection), err(level=Level::INFO))]
     pub(crate) async fn load_graphs_query<C: ConnectionTrait>(
         &self,
@@ -339,6 +341,9 @@ impl InnerService {
             .await
     }
 
+    /// Take a [`GraphQuery`] and load all required SBOMs for a latest search
+    ///
+    /// **NOTE:** This has to be aligned with [`AnalysisService::filter`]
     #[instrument(skip(self, connection), err(level=Level::INFO))]
     pub(crate) async fn load_latest_graphs_query<C: ConnectionTrait>(
         &self,
@@ -483,13 +488,7 @@ impl InnerService {
                     )
                     .join(JoinType::LeftJoin, versioned_purl::Relation::BasePurl.def())
                     .filter(
-                        Cond::any()
-                            .add(
-                                sbom_package_purl_ref::Column::QualifiedPurlId
-                                    .eq(purl.qualifier_uuid()),
-                            )
-                            .add(qualified_purl::Column::VersionedPurlId.eq(purl.version_uuid()))
-                            .add(versioned_purl::Column::BasePurlId.eq(purl.package_uuid())),
+                        sbom_package_purl_ref::Column::QualifiedPurlId.eq(purl.qualifier_uuid()),
                     );
 
                 query_all(subquery.into_query(), connection).await?
