@@ -365,13 +365,13 @@ async fn test_tc2677(
 /// matches for either latest or non-latest endpoints.
 #[test_context(TrustifyContext)]
 #[rstest]
-#[case( // non-latest
+#[case( // latest
     Req { what: What::Id("pkg:maven/io.vertx/vertx-core"), ..Req::default() },
     0
 )]
-#[case( // latest
+#[case( // non-latest
     Req { what: What::Id("pkg:maven/io.vertx/vertx-core"), latest: true, ..Req::default() },
-    2
+    0
 )]
 #[test_log::test(actix_web::test)]
 async fn test_tc2717(
@@ -681,6 +681,7 @@ async fn tc_3170_4(ctx: &TrustifyContext) -> Result<(), anyhow::Error> {
     Ok(())
 }
 
+/// escape values for putting them into a `q` parameter
 fn escape_q(q: impl AsRef<str>) -> String {
     let q = q.as_ref();
 
