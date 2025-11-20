@@ -420,7 +420,8 @@ impl InnerService {
             }
             GraphQuery::Component(ComponentReference::Purl(purl)) => {
                 let subquery = find::<sbom_package_purl_ref::Entity>()
-                    .join(JoinType::LeftJoin, sbom_node::Relation::Package.def())
+                    .join(JoinType::LeftJoin, sbom_package::Relation::Purl.def().rev())
+                    .join(JoinType::LeftJoin, sbom_node::Relation::Package.def().rev())
                     .join(JoinType::LeftJoin, sbom_package::Relation::Cpe.def())
                     .join(
                         JoinType::LeftJoin,
@@ -829,4 +830,24 @@ fn q_columns() -> Columns {
                 _ => None,
             }
         })
+}
+
+#[cfg(test)]
+mod test {
+    use sea_orm::{DbBackend, EntityTrait, QuerySelect, QueryTrait};
+    use trustify_entity::{sbom, sbom_package_purl_ref};
+
+    #[test]
+    fn build_with_sbom() {
+        let sql = sbom_package_purl_ref::Entity::find()
+            .select_only()
+            .column(sbom::Column::SbomId)
+            .column(sbom::Column::Published)
+            .column(trustify_entity::cpe::Column::Id)
+            .left_join(sbom::Entity)
+            .build(DbBackend::Postgres)
+            .to_string();
+
+        assert_eq!(sql, r#"SELECT"#);
+    }
 }
