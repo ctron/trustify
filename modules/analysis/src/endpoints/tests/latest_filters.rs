@@ -4,8 +4,7 @@ use rstest::*;
 use serde_json::{Value, json};
 use std::collections::{HashMap, hash_map::Entry};
 use test_context::test_context;
-use time::OffsetDateTime;
-use time::format_description::well_known::Iso8601;
+use time::{OffsetDateTime, macros::format_description};
 use trustify_test_context::{TrustifyContext, subset::ContainsSubset};
 
 #[test_context(TrustifyContext)]
@@ -518,9 +517,12 @@ async fn tc_3170_3(ctx: &TrustifyContext) -> Result<(), anyhow::Error> {
         .await?;
 
     sort(&mut all["items"]);
-    compress_latest_top(&mut all["items"]);
 
     writeln!(std::fs::File::create("all.txt")?, "{all:#?}")?;
+
+    compress_latest_top(&mut all["items"]);
+
+    writeln!(std::fs::File::create("all_latest.txt")?, "{all:#?}")?;
 
     // must yield the same result
 
@@ -566,6 +568,9 @@ fn compress_latest_top(json: &mut Value) {
         node: String,
     }
 
+    // Format: YYYY-MM-DD HH:MM:SS+00
+    let format = format_description!("[year]-[month]-[day] [hour]:[minute]:[second][offset_hour]");
+
     // iterate over all items
     for item in items.iter() {
         let (Some(cpe), Some(sbom), Some(node), Some(published)) = (
@@ -578,9 +583,12 @@ fn compress_latest_top(json: &mut Value) {
             continue;
         };
 
+        if cpe.is_empty() {
+            continue;
+        }
+
         // parse timestamp
-        let published = time::OffsetDateTime::parse(published, &Iso8601::DEFAULT)
-            .expect("Timestamp must parse");
+        let published = OffsetDateTime::parse(published, &format).expect("Timestamp must parse");
 
         let group = Group {
             published,
@@ -596,14 +604,17 @@ fn compress_latest_top(json: &mut Value) {
             Entry::Occupied(mut entry) => {
                 // existing entry
                 if entry.get().published < published {
-                    // if existing is older, replace with newest
+                    // if existing is older, replace with newer
                     let Group {
                         sbom,
                         node,
                         published: _,
                     } = entry.insert(group);
-                    // record old value for removal
+                    // and record old value for removal
                     remove.push((sbom, node));
+                } else {
+                    // if not, remove this one
+                    remove.push((group.sbom, group.node));
                 }
             }
         }
