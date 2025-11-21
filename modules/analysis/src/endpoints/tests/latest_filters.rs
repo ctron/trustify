@@ -1,8 +1,11 @@
 use super::req::*;
 use crate::test::caller;
 use rstest::*;
-use serde_json::json;
+use serde_json::{Value, json};
+use std::collections::{HashMap, hash_map::Entry};
 use test_context::test_context;
+use time::OffsetDateTime;
+use time::format_description::well_known::Iso8601;
 use trustify_test_context::{TrustifyContext, subset::ContainsSubset};
 
 #[test_context(TrustifyContext)]
@@ -469,4 +472,152 @@ async fn test_tc2578(
 })));
 
     Ok(())
+}
+
+/// Check if, in this case, latest and non-latest return the same result
+#[test_context(TrustifyContext)]
+#[test_log::test(actix_web::test)]
+async fn tc_3170_3(ctx: &TrustifyContext) -> Result<(), anyhow::Error> {
+    use std::io::Write;
+
+    let app = caller(ctx).await?;
+
+    ctx.ingest_documents([
+        "cyclonedx/rh/latest_filters/container/quay_builder_qemu_rhcos_rhel8_2025-02-24/quay-builder-qemu-rhcos-rhel-8-product.json",
+        "cyclonedx/rh/latest_filters/container/quay_builder_qemu_rhcos_rhel8_2025-02-24/quay-builder-qemu-rhcos-rhel-8-image-index.json",
+        "cyclonedx/rh/latest_filters/container/quay_builder_qemu_rhcos_rhel8_2025-02-24/quay-builder-qemu-rhcos-rhel-8-amd64.json",
+    ])
+        .await?;
+
+    let req = Req {
+        loc: Loc::Q("purl~pkg:oci/quay-builder-qemu-rhcos-rhel8"),
+        ancestors: Some(10),
+        ..Default::default()
+    };
+
+    // request latest
+
+    let mut latest = app
+        .req(Req {
+            latest: true,
+            ..req
+        })
+        .await?;
+
+    sort(&mut latest["items"]);
+
+    writeln!(std::fs::File::create("latest.txt")?, "{latest:#?}")?;
+
+    // request all
+
+    let mut all = app
+        .req(Req {
+            latest: false,
+            ..req
+        })
+        .await?;
+
+    sort(&mut all["items"]);
+    compress_latest_top(&mut all["items"]);
+
+    writeln!(std::fs::File::create("all.txt")?, "{all:#?}")?;
+
+    // must yield the same result
+
+    assert_eq!(all, latest);
+
+    // done
+
+    Ok(())
+}
+
+/// sort all entries by node_id. This includes recursive sorting of ancestors/descendants.
+fn sort(json: &mut Value) {
+    let Value::Array(items) = json else {
+        return;
+    };
+
+    // sort list
+
+    items.sort_unstable_by(|a, b| a["node_id"].as_str().cmp(&b["node_id"].as_str()));
+
+    // now sort child entries
+
+    for item in items {
+        sort(&mut item["ancestors"]);
+        sort(&mut item["descendants"]);
+    }
+}
+
+/// remove all duplicate top level elements, by CPE, ordered by latest
+fn compress_latest_top(json: &mut Value) {
+    // we only process arrays
+    let Value::Array(items) = json else {
+        return;
+    };
+
+    let mut latest = HashMap::new();
+    let mut remove = vec![];
+
+    // information required for grouping
+    struct Group {
+        published: OffsetDateTime,
+        sbom: String,
+        node: String,
+    }
+
+    // iterate over all items
+    for item in items.iter() {
+        let (Some(cpe), Some(sbom), Some(node), Some(published)) = (
+            item["cpe"].as_array(),
+            item["sbom_id"].as_str(),
+            item["node_id"].as_str(),
+            item["published"].as_str(),
+        ) else {
+            // if we don't have necessary information, skip
+            continue;
+        };
+
+        // parse timestamp
+        let published = time::OffsetDateTime::parse(published, &Iso8601::DEFAULT)
+            .expect("Timestamp must parse");
+
+        let group = Group {
+            published,
+            sbom: sbom.to_owned(),
+            node: node.to_owned(),
+        };
+
+        match latest.entry(cpe.clone()) {
+            Entry::Vacant(entry) => {
+                // no existing entry, just add
+                entry.insert(group);
+            }
+            Entry::Occupied(mut entry) => {
+                // existing entry
+                if entry.get().published < published {
+                    // if existing is older, replace with newest
+                    let Group {
+                        sbom,
+                        node,
+                        published: _,
+                    } = entry.insert(group);
+                    // record old value for removal
+                    remove.push((sbom, node));
+                }
+            }
+        }
+    }
+
+    // now removed what we recorded for removal
+
+    items.retain(
+        |item| match (item["sbom_id"].as_str(), item["node_id"].as_str()) {
+            (Some(sbom), Some(node)) => {
+                // return false (remove) if the "remove" vec contains the key
+                !remove.iter().any(|key| key.0 == sbom && key.1 == node)
+            }
+            _ => true,
+        },
+    )
 }
