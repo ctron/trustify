@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1764685927641,
+  "lastUpdate": 1765204091941,
   "repoUrl": "https://github.com/ctron/trustify",
   "entries": {
     "Benchmark": [
@@ -2662,6 +2662,35 @@ window.BENCHMARK_DATA = {
           "url": "https://github.com/ctron/trustify/commit/8338c24ac38451f75344f64e01ed9e518fd2e51c"
         },
         "date": 1764685926331,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Ingest DS3",
+            "value": 8,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "ctron@dentrassi.de",
+            "name": "Jens Reimann",
+            "username": "ctron"
+          },
+          "committer": {
+            "email": "00hf11@gmail.com",
+            "name": "Helio Frota",
+            "username": "helio-frota"
+          },
+          "distinct": false,
+          "id": "de8702c164be9da6601a6c6656f1efe57a39ffc5",
+          "message": "build: update num-bigint-dig\n\nIn order to get rid of the compiler warning.",
+          "timestamp": "2025-12-05T15:50:28Z",
+          "tree_id": "4b321ae08783e893932ebdb51c42afd78b5dae1b",
+          "url": "https://github.com/ctron/trustify/commit/de8702c164be9da6601a6c6656f1efe57a39ffc5"
+        },
+        "date": 1765204090796,
         "tool": "customSmallerIsBetter",
         "benches": [
           {
