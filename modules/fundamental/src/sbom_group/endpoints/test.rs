@@ -885,6 +885,40 @@ pub async fn list_groups_with_missing_parent(ctx: &TrustifyContext) -> Result<()
     Ok(())
 }
 
+/// Filter for a group named `null`
+#[test_context(TrustifyContext)]
+#[rstest]
+#[case::equals("name=null", [
+    Item::new(&["null"]),
+])]
+#[case::like("name~null", [
+    Item::new(&["null"]),
+    Item::new(&["null-a"]),
+    Item::new(&["null-b"]),
+])]
+#[test_log::test(actix_web::test)]
+pub async fn list_groups_filter_null(
+    ctx: &TrustifyContext,
+    #[case] q: &str,
+    #[case] expected: impl IntoIterator<Item = Item>,
+) -> Result<(), anyhow::Error> {
+    let app = caller(ctx).await?;
+
+    let ids = create_groups(
+        &app,
+        vec![
+            Group::new("null"),
+            Group::new("null-a"),
+            Group::new("null-b"),
+        ],
+    )
+    .await?;
+
+    run_list_test(app, ids, q, expected).await?;
+
+    Ok(())
+}
+
 /// Run a "list SBOM groups" test
 ///
 /// This takes in an ID-map from the [`create_groups`] function and expected items, which should
