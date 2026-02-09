@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1768830616571,
+  "lastUpdate": 1770641826911,
   "repoUrl": "https://github.com/ctron/trustify",
   "entries": {
     "Benchmark": [
@@ -2749,6 +2749,35 @@ window.BENCHMARK_DATA = {
           "url": "https://github.com/ctron/trustify/commit/63dc503a76c7f5c22552c9340e5cca3a4c57f230"
         },
         "date": 1768830615568,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Ingest DS3",
+            "value": 8,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jim@crossleys.org",
+            "name": "Jim Crossley",
+            "username": "jcrossley3"
+          },
+          "committer": {
+            "email": "jim@crossleys.org",
+            "name": "Jim Crossley",
+            "username": "jcrossley3"
+          },
+          "distinct": false,
+          "id": "783fb32461bbf872f1942a1b5b7ab2bf8010bcd2",
+          "message": "Tighten up expression construction logic and add a few more tests",
+          "timestamp": "2026-02-09T07:47:40Z",
+          "tree_id": "1d234918930e5257fb65701aa5257944fa69eedf",
+          "url": "https://github.com/ctron/trustify/commit/783fb32461bbf872f1942a1b5b7ab2bf8010bcd2"
+        },
+        "date": 1770641826196,
         "tool": "customSmallerIsBetter",
         "benches": [
           {
