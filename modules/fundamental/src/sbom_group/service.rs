@@ -272,7 +272,12 @@ WHERE parent IS NULL
     ) -> Result<bool, Error> {
         // Check if the group has any children (just need to know if at least one exists)
         let has_children = sbom_group::Entity::find()
-            .filter(sbom_group::Column::Parent.into_expr().cast_as("text").eq(id))
+            .filter(
+                sbom_group::Column::Parent
+                    .into_expr()
+                    .cast_as("text")
+                    .eq(id),
+            )
             .limit(1)
             .one(db)
             .await?
