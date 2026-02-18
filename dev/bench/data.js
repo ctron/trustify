@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1771327300126,
+  "lastUpdate": 1771408294907,
   "repoUrl": "https://github.com/ctron/trustify",
   "entries": {
     "Benchmark": [
@@ -2807,6 +2807,35 @@ window.BENCHMARK_DATA = {
           "url": "https://github.com/ctron/trustify/commit/9a62e32a717fa19aeb090a5d35f6e2cd917fb2fe"
         },
         "date": 1771327298548,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Ingest DS3",
+            "value": 10,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "ctron@dentrassi.de",
+            "name": "Jens Reimann",
+            "username": "ctron"
+          },
+          "committer": {
+            "email": "ctron@dentrassi.de",
+            "name": "Jens Reimann",
+            "username": "ctron"
+          },
+          "distinct": false,
+          "id": "083ccfe050d71b1086f7ac277a9de0506000a729",
+          "message": "feat: add xz to the xtask container\n\nWhen generating dumps using that container, having xz can create smaller\ndumps.",
+          "timestamp": "2026-02-17T20:58:05Z",
+          "tree_id": "a559b4f5cddb837036ec1453365cf944a6a3b8d7",
+          "url": "https://github.com/ctron/trustify/commit/083ccfe050d71b1086f7ac277a9de0506000a729"
+        },
+        "date": 1771408293292,
         "tool": "customSmallerIsBetter",
         "benches": [
           {
