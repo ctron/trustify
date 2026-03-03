@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1771491150632,
+  "lastUpdate": 1772531303571,
   "repoUrl": "https://github.com/ctron/trustify",
   "entries": {
     "Benchmark": [
@@ -2870,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Ingest DS3",
             "value": 11,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "waldemar.kindler@think-ahead.tech",
+            "name": "Waldemar Kindler",
+            "username": "waldemar-kindler"
+          },
+          "committer": {
+            "email": "ctron@dentrassi.de",
+            "name": "Jens Reimann",
+            "username": "ctron"
+          },
+          "distinct": true,
+          "id": "ccf67ed7b109f78bdbfa3211a8c504f61a682780",
+          "message": "test(osv): update loader_crates_io test to use transaction context",
+          "timestamp": "2026-03-02T15:06:47Z",
+          "tree_id": "a3ce5220fed99f748c9041d9ed8129ec71b591d3",
+          "url": "https://github.com/ctron/trustify/commit/ccf67ed7b109f78bdbfa3211a8c504f61a682780"
+        },
+        "date": 1772531302714,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Ingest DS3",
+            "value": 9,
             "unit": "s"
           }
         ]
