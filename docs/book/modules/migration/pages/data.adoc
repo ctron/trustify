@@ -36,7 +36,7 @@ This can be achieved with a read-only replica:
 The re-ingestion can be run in two ways:
 
 * During the SeoORM migration
-* Before the SeoORM migration
+* Before the SeoORM migration (out-of-band)
 
 The main difference is that when running during the SeoORM migration, you have less control over the process. It will
 be driven by the SeoORM migration, and you have to wait until everything is finished.
@@ -47,11 +47,87 @@ re-ingestion on a database copy, and then switch over to replace the database wi
 Afterwards, you can run SeoORM migrations, which will then skip those DB modifications (as they are already applied) and
 also skip the re-ingestion.
 
+== Out-of-band
+
+It is possible to run the migrations "out-of-band". Meaning, that it is not orchestrated by the SeaORM migration
+manager, but run before.
+
+An advantage of this is, that it can be parallelized, while the in-band approach cannot. This can reduce the time of
+migration drastically. However, there are also some downsides:
+
+* Depending on the migrations, it may be necessary to apply all SeaORM migrations up to a certain point. For example,
+  if a data migration depends on another migration.
+* Out-of-band migrations are not covered by a single transaction. Therefore, it may happen that part of the documents
+  are migrated, while others are not.
+* SeaORM migrations must still be run, and receive the information which data migrations to ignore.
+
+However, the migrations should be applied anyway on a database replica/clone/snapshot, and not the running product
+instance. Once it succeeded, this replica should become the new instance to use.
+
+IMPORTANT: Even though the migrations require access to S3, only read access is required.
+
 === Example
 
 Upgrading from `0.4.x` to `0.5.0`. There are the following data migrations:
 
+* `m0002000_add_sbom_properties`
+* `m0002010_add_advisory_scores`
 
+Those can be discovered using:
+
+[source,bash]
+----
+trustd data list
+----
+
+So at first, we run the data migrations out-of-band:
+
+[source,bash]
+----
+trustd data run m0002000_add_sbom_properties m0002010_add_advisory_scores
+----
+
+For this to work, we also need to provide the database connection and the storage system configuration. The database
+can be provided using the environment variable `DATABASE_URL`. The storage configuration through the
+`TRUSTD_STORAGE_STRATEGY` and related variables.
+
+NOTE: The following example assume that those environment variables will be set.
+
+Then, when running the remaining SeaORM migrations, run using:
+
+[source,bash]
+----
+env MIGRATION_DATA_SKIP=m0002000_add_sbom_properties,m0002010_add_advisory_scores trustd db migrate
+----
+
+Or, if you are sure to skip all data migrations:
+
+[source,bash]
+----
+env MIGRATION_DATA_SKIP_ALL=true trustd db migrate
+----
+
+==== Parallelizing
+
+By default, a single runner will perform multiple concurrent migrations. The number of concurrent operations is limited
+by the logical CPUs the task has available. This behavior can the modified by providing the `--concurrent <num>`
+argument.
+
+It is also possible to further parallelize operations by running multiple instances of the migration. For this, you will
+need to provide the following two arguments: `--total <total>` and `--current <current>`. This will partition the
+work between the different instances. `<total>` is the total number of runners you will start, and each runner
+is identified by the `<current>` value (zero based). So assuming you would want to run 3 processes in parallel, you
+would need to start:
+
+[source,bash]
+----
+trustd data run --total 3 --current 0 &
+trustd data run --total 3 --current 1 &
+trustd data run --total 3 --current 2 &
+----
+
+WARNING: Providing misaligned values will result either in un-migrated documents, or in concurrent locks on the same
+document.
 
 == The lazy way
 
