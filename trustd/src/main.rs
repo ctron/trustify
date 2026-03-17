@@ -10,6 +10,7 @@ use tokio::{
     task::{LocalSet, spawn_local},
 };
 
+mod data;
 mod db;
 mod openapi;
 
@@ -22,6 +23,11 @@ pub enum Command {
     Importer(trustify_server::profile::importer::Run),
     /// Manage the database
     Db(db::Run),
+    /// Data migrations
+    Data {
+        #[command(subcommand)]
+        command: data::Data,
+    },
     /// Access OpenAPI related information of the API server
     Openapi(openapi::Run),
 }
@@ -44,6 +50,7 @@ impl Trustd {
             Some(Command::Api(run)) => run.run().await,
             Some(Command::Importer(run)) => run.run().await,
             Some(Command::Db(run)) => run.run().await,
+            Some(Command::Data { command }) => command.run().await,
             Some(Command::Openapi(run)) => run.run().await,
             None => pm_mode().await,
         }

@@ -1,27 +1,35 @@
-use clap::Parser;
 use migration::{
     Migrator,
     data::{Database, Direction, MigratorWithData, Options, Runner},
 };
+use std::process::ExitCode;
 use trustify_module_storage::config::StorageConfig;
-
-#[derive(clap::Parser, Debug, Clone)]
-struct Cli {
-    #[command(subcommand)]
-    command: Command,
-}
 
 #[derive(clap::Subcommand, Debug, Clone)]
 #[allow(clippy::large_enum_variant)]
-enum Command {
+pub enum Data {
     /// List all data migrations
     List,
     /// Run a list of migrations
     Run(Run),
 }
 
+impl Data {
+    pub async fn run(self) -> anyhow::Result<ExitCode> {
+        match self {
+            Self::List => {
+                for m in Migrator::data_migrations() {
+                    println!("{}", m.name());
+                }
+                Ok(ExitCode::SUCCESS)
+            }
+            Self::Run(run) => run.run().await,
+        }
+    }
+}
+
 #[derive(clap::Args, Debug, Clone)]
-struct Run {
+pub struct Run {
     /// Migration direction to run
     #[arg(
         long,
@@ -77,7 +85,7 @@ impl Run {
     }
 
     #[allow(clippy::expect_used)]
-    pub async fn run(self) -> anyhow::Result<()> {
+    pub async fn run(self) -> anyhow::Result<ExitCode> {
         let direction = self.direction();
         let storage = self.storage.into_storage(false).await?;
 
@@ -96,30 +104,6 @@ impl Run {
         .run::<Migrator>()
         .await?;
 
-        Ok(())
+        Ok(ExitCode::SUCCESS)
     }
-}
-
-impl Command {
-    pub async fn run(self) -> anyhow::Result<()> {
-        match self {
-            Command::Run(run) => run.run().await,
-            Command::List => {
-                for m in Migrator::data_migrations() {
-                    println!("{}", m.name());
-                }
-                Ok(())
-            }
-        }
-    }
-}
-
-#[allow(clippy::unwrap_used)]
-#[tokio::main]
-async fn main() {
-    let cli = Cli::parse();
-
-    tracing_subscriber::fmt::init();
-
-    cli.command.run().await.unwrap();
 }

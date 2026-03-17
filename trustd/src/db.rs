@@ -1,9 +1,7 @@
-use migration::data::{self, Direction, Options, Runner};
 use postgresql_embedded::{PostgreSQL, VersionReq};
 use std::{collections::HashMap, env, fs::create_dir_all, process::ExitCode, time::Duration};
 use trustify_common::{config::Database, db};
 use trustify_infrastructure::otel::{Tracing, init_tracing};
-use trustify_module_storage::config::StorageConfig;
 
 #[derive(clap::Args, Debug)]
 pub struct Run {
@@ -22,8 +20,6 @@ pub enum Command {
     Migrate,
     /// Remove all migrations and re-apply them (DANGER)
     Refresh,
-    /// Run specific data migrations
-    Data(Data),
 }
 
 impl Run {
@@ -34,7 +30,6 @@ impl Run {
             Create => self.create().await,
             Migrate => self.migrate().await,
             Refresh => self.refresh().await,
-            Data(data) => data.run(Direction::Up, self.database).await,
         }
     }
 
@@ -108,45 +103,5 @@ impl Run {
         log::info!("Running on port {port}");
 
         Ok(postgresql)
-    }
-}
-
-#[derive(clap::Args, Debug, Clone)]
-pub struct Data {
-    /// Migrations to run
-    #[arg()]
-    name: Vec<String>,
-    #[command(flatten)]
-    storage: StorageConfig,
-    #[command(flatten)]
-    options: Options,
-}
-
-impl Data {
-    pub async fn run(self, direction: Direction, database: Database) -> anyhow::Result<ExitCode> {
-        let Self {
-            name: migrations,
-            storage,
-            options,
-        } = self;
-
-        match db::Database::new(&database).await {
-            Ok(db) => {
-                trustify_db::Database(&db)
-                    .data_migrate(Runner {
-                        database: data::Database::Config {
-                            url: database.to_url(),
-                            schema: None,
-                        },
-                        storage: storage.into_storage(false).await?,
-                        direction,
-                        migrations,
-                        options,
-                    })
-                    .await?;
-                Ok(ExitCode::SUCCESS)
-            }
-            Err(e) => Err(e),
-        }
     }
 }
