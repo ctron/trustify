@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772531303571,
+  "lastUpdate": 1773739660030,
   "repoUrl": "https://github.com/ctron/trustify",
   "entries": {
     "Benchmark": [
@@ -2894,6 +2894,35 @@ window.BENCHMARK_DATA = {
           "url": "https://github.com/ctron/trustify/commit/ccf67ed7b109f78bdbfa3211a8c504f61a682780"
         },
         "date": 1772531302714,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Ingest DS3",
+            "value": 9,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "ctron@dentrassi.de",
+            "name": "Jens Reimann",
+            "username": "ctron"
+          },
+          "committer": {
+            "email": "ctron@dentrassi.de",
+            "name": "Jens Reimann",
+            "username": "ctron"
+          },
+          "distinct": true,
+          "id": "54a74af242eea77bfd34149b77149860a825864c",
+          "message": "ci: refresh dependencies\n\nMostly replacing actions which still use Node 20, which is deprecated.\n\nAlso see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/",
+          "timestamp": "2026-03-17T10:11:57+01:00",
+          "tree_id": "454db03b6e92687b0ead1921d8389093d28c82a3",
+          "url": "https://github.com/ctron/trustify/commit/54a74af242eea77bfd34149b77149860a825864c"
+        },
+        "date": 1773739658419,
         "tool": "customSmallerIsBetter",
         "benches": [
           {
