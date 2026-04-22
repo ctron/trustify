@@ -23,7 +23,9 @@ isx = { workspace = true }
 itertools = { workspace = true }
 lenient_semver = { workspace = true }
 log = { workspace = true }
+moka = { workspace = true, features = ["future"] }
 native-tls = { workspace = true }
+opentelemetry = { workspace = true, features = ["metrics"] }
 packageurl = { workspace = true }
 pem = { workspace = true }
 regex = { workspace = true }
