@@ -79,7 +79,7 @@ impl Graph {
         connection: &C,
     ) -> Result<Option<SbomContext>, Error> {
         Ok(sbom::Entity::find()
-            .join(JoinType::LeftJoin, sbom::Relation::SourceDocument.def())
+            .join(JoinType::InnerJoin, sbom::Relation::SourceDocument.def())
             .filter(
                 Condition::any()
                     .add(source_document::Column::Sha256.eq(digest.to_string()))

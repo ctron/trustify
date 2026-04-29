@@ -42,7 +42,7 @@ impl AdvisoryService {
     ) -> Result<PaginatedResults<AdvisorySummary>, Error> {
         let limiter = advisory::Entity::find()
             .with_deprecation(deprecation)
-            .left_join(source_document::Entity)
+            .inner_join(source_document::Entity)
             .join(JoinType::LeftJoin, advisory::Relation::Issuer.def())
             .filtering_with(
                 search,
@@ -78,7 +78,7 @@ impl AdvisoryService {
         connection: &C,
     ) -> Result<Option<AdvisoryDetails>, Error> {
         let results = advisory::Entity::find()
-            .left_join(source_document::Entity)
+            .inner_join(source_document::Entity)
             .join(JoinType::LeftJoin, advisory::Relation::Issuer.def())
             .try_filter(id)?
             .try_into_multi_model::<AdvisoryCatcher>()?

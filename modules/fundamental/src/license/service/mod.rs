@@ -249,7 +249,7 @@ impl LicenseService {
     ) -> Result<Option<Vec<LicenseRefMapping>>, Error> {
         // check the SBOM exists searching by the provided Id
         let sbom = sbom::Entity::find()
-            .join(JoinType::LeftJoin, sbom::Relation::SourceDocument.def())
+            .join(JoinType::InnerJoin, sbom::Relation::SourceDocument.def())
             .try_filter(id)?
             .one(connection)
             .await?;
