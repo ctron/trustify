@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1776676864983,
+  "lastUpdate": 1782289813859,
   "repoUrl": "https://github.com/ctron/trustify",
   "entries": {
     "Benchmark": [
@@ -2981,6 +2981,35 @@ window.BENCHMARK_DATA = {
           "url": "https://github.com/ctron/trustify/commit/67c8fe521fadbad429de8358cce8c39d60b48ea3"
         },
         "date": 1776676863594,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Ingest DS3",
+            "value": 9,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jim@crossleys.org",
+            "name": "Jim Crossley",
+            "username": "jcrossley3"
+          },
+          "committer": {
+            "email": "jim@crossleys.org",
+            "name": "Jim Crossley",
+            "username": "jcrossley3"
+          },
+          "distinct": true,
+          "id": "01eb2bf988047653ae259a8d200b8c0b2cf6e01b",
+          "message": "fix(tls): default TLS security profile to modern\n\nChange the default TLS security profile from intermediate (TLS 1.2+)\nto modern (TLS 1.3 only), preserving the existing security posture.\nOperators who need broader compatibility can opt in to a less\nrestrictive profile via HTTP_SERVER_TLS_SECURITY_PROFILE.\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>",
+          "timestamp": "2026-06-17T15:31:33Z",
+          "tree_id": "50b0dea322f5cdf946760cee2bf7646c63a59fb4",
+          "url": "https://github.com/ctron/trustify/commit/01eb2bf988047653ae259a8d200b8c0b2cf6e01b"
+        },
+        "date": 1782289812779,
         "tool": "customSmallerIsBetter",
         "benches": [
           {
