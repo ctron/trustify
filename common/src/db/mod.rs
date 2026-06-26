@@ -24,7 +24,6 @@ use std::{
     ops::{Deref, DerefMut},
     pin::Pin,
     str::FromStr,
-    time::Duration,
 };
 use tracing::instrument;
 
@@ -126,10 +125,10 @@ impl Database {
             opt.sqlx_slow_statements_logging_settings(log::LevelFilter::Warn, *threshold);
         }
 
-        opt.connect_timeout(Duration::from_secs(database.connect_timeout));
-        opt.acquire_timeout(Duration::from_secs(database.acquire_timeout));
-        opt.max_lifetime(Duration::from_secs(database.max_lifetime));
-        opt.idle_timeout(Duration::from_secs(database.idle_timeout));
+        opt.connect_timeout(*database.connect_timeout);
+        opt.acquire_timeout(*database.acquire_timeout);
+        opt.max_lifetime(*database.max_lifetime);
+        opt.idle_timeout(*database.idle_timeout);
 
         let db = sea_orm::Database::connect(opt).await?;
         let name = database.name.clone();

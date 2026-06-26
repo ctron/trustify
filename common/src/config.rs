@@ -1,9 +1,7 @@
 use anyhow::anyhow;
 use clap::ValueEnum;
 use hide::Hide;
-use humantime::parse_duration;
 use std::env;
-use time::ext::NumericalStdDuration;
 
 const DB_NAME: &str = "trustify";
 const DB_USER: &str = "postgres";
@@ -12,10 +10,10 @@ const DB_HOST: &str = "localhost";
 const DB_PORT: u16 = 5432;
 const DB_MAX_CONN: u32 = 75;
 const DB_MIN_CONN: u32 = 25;
-const DB_CONNECT_TIMEOUT: u64 = 8;
-const DB_ACQUIRE_TIMEOUT: u64 = 8;
-const DB_MAX_LIFETIME: u64 = 7200;
-const DB_IDLE_TIMEOUT: u64 = 600;
+const DB_CONNECT_TIMEOUT: &str = "8s";
+const DB_ACQUIRE_TIMEOUT: &str = "8s";
+const DB_MAX_LIFETIME: &str = "2h";
+const DB_IDLE_TIMEOUT: &str = "10m";
 
 const ENV_DB_URL: &str = "TRUSTD_DB_URL";
 const ENV_DB_NAME: &str = "TRUSTD_DB_NAME";
@@ -88,14 +86,14 @@ pub struct Database {
     #[arg(id="db-sslmode", long, env = ENV_DB_SSLMODE, default_value_t, conflicts_with = "db-url", value_enum)]
     pub sslmode: SslMode,
 
-    #[arg(id="db-conn-timeout", long, env = ENV_DB_CONNECT_TIMEOUT, default_value_t=DB_CONNECT_TIMEOUT.into(), conflicts_with = "db-url")]
-    pub connect_timeout: u64,
-    #[arg(id="db-acquire-timeout", long, env = ENV_DB_ACQUIRE_TIMEOUT, default_value_t=DB_ACQUIRE_TIMEOUT.into(), conflicts_with = "db-url")]
-    pub acquire_timeout: u64,
-    #[arg(id="db-max-lifetime", long, env = ENV_DB_MAX_LIFETIME, default_value_t=DB_MAX_LIFETIME.into(), conflicts_with = "db-url")]
-    pub max_lifetime: u64,
-    #[arg(id="db-idle-timeout", long, env = ENV_DB_IDLE_TIMEOUT, default_value_t=DB_IDLE_TIMEOUT.into(), conflicts_with = "db-url")]
-    pub idle_timeout: u64,
+    #[arg(id="db-conn-timeout", long, env = ENV_DB_CONNECT_TIMEOUT, default_value = DB_CONNECT_TIMEOUT, conflicts_with = "db-url")]
+    pub connect_timeout: humantime::Duration,
+    #[arg(id="db-acquire-timeout", long, env = ENV_DB_ACQUIRE_TIMEOUT, default_value = DB_ACQUIRE_TIMEOUT, conflicts_with = "db-url")]
+    pub acquire_timeout: humantime::Duration,
+    #[arg(id="db-max-lifetime", long, env = ENV_DB_MAX_LIFETIME, default_value = DB_MAX_LIFETIME, conflicts_with = "db-url")]
+    pub max_lifetime: humantime::Duration,
+    #[arg(id="db-idle-timeout", long, env = ENV_DB_IDLE_TIMEOUT, default_value = DB_IDLE_TIMEOUT, conflicts_with = "db-url")]
+    pub idle_timeout: humantime::Duration,
 }
 
 impl Database {
@@ -118,30 +116,22 @@ impl Database {
                 Ok(s) => s.parse::<u32>()?,
                 _ => DB_MIN_CONN,
             },
-            connect_timeout: match env::var(ENV_DB_CONNECT_TIMEOUT) {
-                Ok(s) => parse_duration(&s)
-                    .unwrap_or(DB_IDLE_TIMEOUT.std_seconds())
-                    .as_secs(),
-                _ => DB_CONNECT_TIMEOUT,
-            },
-            acquire_timeout: match env::var(ENV_DB_ACQUIRE_TIMEOUT) {
-                Ok(s) => parse_duration(&s)
-                    .unwrap_or(DB_ACQUIRE_TIMEOUT.std_seconds())
-                    .as_secs(),
-                _ => DB_ACQUIRE_TIMEOUT,
-            },
-            max_lifetime: match env::var(ENV_DB_MAX_LIFETIME) {
-                Ok(s) => parse_duration(&s)
-                    .unwrap_or(DB_MAX_LIFETIME.std_seconds())
-                    .as_secs(),
-                _ => DB_MAX_LIFETIME,
-            },
-            idle_timeout: match env::var(ENV_DB_IDLE_TIMEOUT) {
-                Ok(s) => parse_duration(&s)
-                    .unwrap_or(DB_IDLE_TIMEOUT.std_seconds())
-                    .as_secs(),
-                _ => DB_IDLE_TIMEOUT,
-            },
+            connect_timeout: env::var(ENV_DB_CONNECT_TIMEOUT)
+                .ok()
+                .and_then(|s| s.parse().ok())
+                .unwrap_or_else(|| DB_CONNECT_TIMEOUT.parse().unwrap()),
+            acquire_timeout: env::var(ENV_DB_ACQUIRE_TIMEOUT)
+                .ok()
+                .and_then(|s| s.parse().ok())
+                .unwrap_or_else(|| DB_ACQUIRE_TIMEOUT.parse().unwrap()),
+            max_lifetime: env::var(ENV_DB_MAX_LIFETIME)
+                .ok()
+                .and_then(|s| s.parse().ok())
+                .unwrap_or_else(|| DB_MAX_LIFETIME.parse().unwrap()),
+            idle_timeout: env::var(ENV_DB_IDLE_TIMEOUT)
+                .ok()
+                .and_then(|s| s.parse().ok())
+                .unwrap_or_else(|| DB_IDLE_TIMEOUT.parse().unwrap()),
             sslmode: match env::var(ENV_DB_SSLMODE) {
                 Ok(s) => SslMode::from_str(&s, false)
                     .map_err(|s| anyhow!("Failed to convert '{s}' to SslMode"))?,
@@ -206,13 +196,13 @@ pub struct DatabaseReadOnly {
     #[arg(id = "db-ro-sslmode", long, env = ENV_DB_RO_SSLMODE, value_enum)]
     pub sslmode: Option<SslMode>,
     #[arg(id = "db-ro-conn-timeout", long, env = ENV_DB_RO_CONNECT_TIMEOUT)]
-    pub connect_timeout: Option<u64>,
+    pub connect_timeout: Option<humantime::Duration>,
     #[arg(id = "db-ro-acquire-timeout", long, env = ENV_DB_RO_ACQUIRE_TIMEOUT)]
-    pub acquire_timeout: Option<u64>,
+    pub acquire_timeout: Option<humantime::Duration>,
     #[arg(id = "db-ro-max-lifetime", long, env = ENV_DB_RO_MAX_LIFETIME)]
-    pub max_lifetime: Option<u64>,
+    pub max_lifetime: Option<humantime::Duration>,
     #[arg(id = "db-ro-idle-timeout", long, env = ENV_DB_RO_IDLE_TIMEOUT)]
-    pub idle_timeout: Option<u64>,
+    pub idle_timeout: Option<humantime::Duration>,
 }
 
 impl DatabaseReadOnly {
@@ -262,10 +252,10 @@ mod test {
                 name: DB_NAME.into(),
                 max_conn: DB_MAX_CONN,
                 min_conn: DB_MIN_CONN,
-                connect_timeout: DB_CONNECT_TIMEOUT,
-                acquire_timeout: DB_ACQUIRE_TIMEOUT,
-                max_lifetime: DB_MAX_LIFETIME,
-                idle_timeout: DB_IDLE_TIMEOUT,
+                connect_timeout: DB_CONNECT_TIMEOUT.parse().unwrap(),
+                acquire_timeout: DB_ACQUIRE_TIMEOUT.parse().unwrap(),
+                max_lifetime: DB_MAX_LIFETIME.parse().unwrap(),
+                idle_timeout: DB_IDLE_TIMEOUT.parse().unwrap(),
                 sslmode: SslMode::default(),
             },
             result
@@ -287,10 +277,10 @@ mod test {
                 name: DB_NAME.into(),
                 max_conn: DB_MAX_CONN,
                 min_conn: DB_MIN_CONN,
-                connect_timeout: DB_CONNECT_TIMEOUT,
-                acquire_timeout: DB_ACQUIRE_TIMEOUT,
-                max_lifetime: DB_MAX_LIFETIME,
-                idle_timeout: DB_IDLE_TIMEOUT,
+                connect_timeout: DB_CONNECT_TIMEOUT.parse().unwrap(),
+                acquire_timeout: DB_ACQUIRE_TIMEOUT.parse().unwrap(),
+                max_lifetime: DB_MAX_LIFETIME.parse().unwrap(),
+                idle_timeout: DB_IDLE_TIMEOUT.parse().unwrap(),
                 sslmode: SslMode::Disable,
             },
             result
@@ -313,10 +303,10 @@ mod test {
             name: DB_NAME.into(),
             max_conn: DB_MAX_CONN,
             min_conn: DB_MIN_CONN,
-            connect_timeout: DB_CONNECT_TIMEOUT,
-            acquire_timeout: DB_ACQUIRE_TIMEOUT,
-            max_lifetime: DB_MAX_LIFETIME,
-            idle_timeout: DB_IDLE_TIMEOUT,
+            connect_timeout: DB_CONNECT_TIMEOUT.parse().unwrap(),
+            acquire_timeout: DB_ACQUIRE_TIMEOUT.parse().unwrap(),
+            max_lifetime: DB_MAX_LIFETIME.parse().unwrap(),
+            idle_timeout: DB_IDLE_TIMEOUT.parse().unwrap(),
             sslmode: SslMode::default(),
         }
     }
