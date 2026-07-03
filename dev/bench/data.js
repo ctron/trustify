@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1782808616180,
+  "lastUpdate": 1783077648550,
   "repoUrl": "https://github.com/ctron/trustify",
   "entries": {
     "Benchmark": [
@@ -3073,6 +3073,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Ingest DS3",
             "value": 10,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "ctron@dentrassi.de",
+            "name": "Jens Reimann",
+            "username": "ctron"
+          },
+          "committer": {
+            "email": "ctron@dentrassi.de",
+            "name": "Jens Reimann",
+            "username": "ctron"
+          },
+          "distinct": true,
+          "id": "cf5466c572ca55793c74383d11777eea6b78f48e",
+          "message": "chore: add cache hit/miss instrumentation to pagination total cache\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>",
+          "timestamp": "2026-07-03T06:55:05Z",
+          "tree_id": "6d4c069953a5a281b463e70c61379fc13cdb7ae5",
+          "url": "https://github.com/ctron/trustify/commit/cf5466c572ca55793c74383d11777eea6b78f48e"
+        },
+        "date": 1783077647120,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Ingest DS3",
+            "value": 8,
             "unit": "s"
           }
         ]
