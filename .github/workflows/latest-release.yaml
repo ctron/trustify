@@ -8,6 +8,10 @@ on:
     branches:
       - main
       - release/*
+  pull_request:
+    branches:
+      - main
+      - release/*
   workflow_dispatch:
 
 concurrency:
@@ -94,6 +98,7 @@ jobs:
       # Push to ghcr.io
 
       - name: Push to ghcr.io (trustd)
+        if: github.event_name != 'pull_request'
         id: push-trustd
         uses: redhat-actions/push-to-registry@v2
         with:
@@ -104,6 +109,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Push to ghcr.io (xtask)
+        if: github.event_name != 'pull_request'
         id: push-xtask
         uses: redhat-actions/push-to-registry@v2
         with:
@@ -114,6 +120,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Push to ghcr.io (gensbom)
+        if: github.event_name != 'pull_request'
         id: push-gensbom
         uses: redhat-actions/push-to-registry@v2
         with:
@@ -124,7 +131,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
   deploy:
-    if: ${{ (github.repository == 'guacsec/trustify') && (needs.init.outputs.version == 'main') }}
+    if: ${{ github.event_name != 'pull_request' && (github.repository == 'guacsec/trustify') && (needs.init.outputs.version == 'main') }}
     runs-on: ubuntu-24.04
     needs:
       - publish
