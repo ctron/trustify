@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1788769829527,
+  "lastUpdate": 1789571383446,
   "repoUrl": "https://github.com/ctron/trustify",
   "entries": {
     "Benchmark": [
@@ -3242,6 +3242,35 @@ window.BENCHMARK_DATA = {
           "url": "https://github.com/ctron/trustify/commit/9752caa642b15e43a1e69698ea09dffcd693269e"
         },
         "date": 1788769828360,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Ingest DS3",
+            "value": 9,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "rromerom@redhat.com",
+            "name": "Ruben Romero Montes",
+            "username": "ruromero"
+          },
+          "committer": {
+            "email": "rromerom@redhat.com",
+            "name": "Ruben Romero Montes",
+            "username": "ruromero"
+          },
+          "distinct": true,
+          "id": "c8f6bf95a40228e774a4f309e5f348a8c9eb574f",
+          "message": "chore(refactor): rebase conflict\n\nSigned-off-by: Ruben Romero Montes <rromerom@redhat.com>",
+          "timestamp": "2026-09-16T13:46:24Z",
+          "tree_id": "d1b228d9ee5a27eaa1b6c196db9b8a4d74954b2e",
+          "url": "https://github.com/ctron/trustify/commit/c8f6bf95a40228e774a4f309e5f348a8c9eb574f"
+        },
+        "date": 1789571382538,
         "tool": "customSmallerIsBetter",
         "benches": [
           {
