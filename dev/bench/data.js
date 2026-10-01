@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1789571383446,
+  "lastUpdate": 1790838287799,
   "repoUrl": "https://github.com/ctron/trustify",
   "entries": {
     "Benchmark": [
@@ -3271,6 +3271,35 @@ window.BENCHMARK_DATA = {
           "url": "https://github.com/ctron/trustify/commit/c8f6bf95a40228e774a4f309e5f348a8c9eb574f"
         },
         "date": 1789571382538,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Ingest DS3",
+            "value": 9,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "rhodulak@redhat.com",
+            "name": "rhodulak",
+            "username": "rhredhat"
+          },
+          "committer": {
+            "email": "jfuller@redhat.com",
+            "name": "James Fuller",
+            "username": "rh-jfuller"
+          },
+          "distinct": true,
+          "id": "96fc44b4cda9f6ee08d69ac239e6e7fe1de3df8b",
+          "message": "test(datasets): add DS7 with hand-written CycloneDX 1.7 SBOMs\n\nThe existing datasets are SPDX-only Red Hat production documents (DS1,\nDS3) or importer configs for dump generation (DS2, DS4). Nothing\nexercises CycloneDX, so there was nothing to upload to a running\ninstance when verifying the 1.7 work by hand.\n\nDS7 is five documents, each small enough to read and edit, that between\nthem cover the ingestion paths we care about plus the fields 1.7 added\non top of 1.6: component.isExternal, component.versionRange,\ncomponent.patentAssertions, metadata.distributionConstraints.tlp,\ntop-level citations, algorithmProperties.algorithmFamily/.ellipticCurve\nand relatedCryptographicAssets.\n\nThe CBOM algorithms are picked so the PQC policy produces one of each\nverdict: ML-KEM/ML-DSA compliant, RSA-1024 and SHA-1 non-compliant, AES\nand ECDSA warn.\n\nImplements TC-6639\n\nCo-Authored-By: Claude Opus 5 <noreply@anthropic.com>\nAssisted-by: Claude Code",
+          "timestamp": "2026-09-30T15:45:50Z",
+          "tree_id": "6d507884f6bafb3f499e61b863ab31477333dc55",
+          "url": "https://github.com/ctron/trustify/commit/96fc44b4cda9f6ee08d69ac239e6e7fe1de3df8b"
+        },
+        "date": 1790838286032,
         "tool": "customSmallerIsBetter",
         "benches": [
           {
