@@ -1434,3 +1434,10 @@ async fn confidence_factors(ctx: &TrustifyContext) -> anyhow::Result<()> {
 
     Ok(())
 }
+
+/// The fence keeping `version_matches()` from being evaluated for versions not used by an SBOM.
+#[test]
+fn sbom_versions_fenced() {
+    let sql = sbom_versions().to_string(sea_orm::sea_query::PostgresQueryBuilder);
+    assert!(sql.ends_with("OFFSET 0"), "{sql}");
+}

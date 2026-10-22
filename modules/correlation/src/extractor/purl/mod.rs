@@ -51,8 +51,8 @@ use crate::{
 };
 use sea_orm::{
     ColumnTrait, ConnectionTrait, DatabaseTransaction, EntityTrait, FromQueryResult, JoinType,
-    LoaderTrait, QueryFilter, QuerySelect, RelationTrait,
-    sea_query::{Alias, Expr, Func, SimpleExpr},
+    LoaderTrait, QueryFilter, QuerySelect, QueryTrait, RelationTrait,
+    sea_query::{Alias, Expr, ExprTrait, Func, Query, SelectStatement, SimpleExpr},
 };
 use std::{
     collections::{BTreeMap, BTreeSet, HashMap},
@@ -714,17 +714,55 @@ async fn load_purl_status_matches(
         .await?)
 }
 
+/// The versions of the joined `base_purl` used by an SBOM, as `versioned_purl`.
+///
+/// Fenced with `OFFSET 0`: Postgres would otherwise merge the subquery, and evaluate the costly
+/// `version_matches()` for every known version, including the many only known from advisories,
+/// before checking for SBOMs.
+fn sbom_versions() -> SelectStatement {
+    let used = Query::select()
+        .expr(Expr::val(1))
+        .from(qualified_purl::Entity)
+        .inner_join(
+            sbom_node_purl_ref::Entity,
+            Expr::col((
+                sbom_node_purl_ref::Entity,
+                sbom_node_purl_ref::Column::QualifiedPurlId,
+            ))
+            .equals((qualified_purl::Entity, qualified_purl::Column::Id)),
+        )
+        .and_where(
+            Expr::col((
+                qualified_purl::Entity,
+                qualified_purl::Column::VersionedPurlId,
+            ))
+            .equals((versioned_purl::Entity, versioned_purl::Column::Id)),
+        )
+        .to_owned();
+
+    Query::select()
+        .columns([versioned_purl::Column::Id, versioned_purl::Column::Version])
+        .from(versioned_purl::Entity)
+        .and_where(
+            Expr::col((versioned_purl::Entity, versioned_purl::Column::BasePurlId))
+                .equals((base_purl::Entity, base_purl::Column::Id)),
+        )
+        .and_where(Expr::exists(used))
+        .offset(0)
+        .to_owned()
+}
+
 /// Load SBOM nodes matching the candidates of an advisory's PURL-based assertions.
 ///
-/// Join chain: purl_status → base_purl → versioned_purl → qualified_purl → sbom_node_purl_ref,
-/// plus purl_status → version_range + status, filtered by the candidates' condition and
-/// `version_matches()`.
+/// Join chain: purl_status → base_purl → versioned_purl (used by SBOMs, see [`sbom_versions`]) →
+/// qualified_purl → sbom_node_purl_ref, plus purl_status → version_range + status, filtered by
+/// the candidates' condition and `version_matches()`.
 async fn load_advisory_purl_matches(
     advisory_id: Uuid,
     candidates: &Candidates,
     connection: &impl ConnectionTrait,
 ) -> Result<Vec<AdvisoryPurlMatch>, Error> {
-    Ok(candidates
+    let mut select = candidates
         .select(purl_status::Entity::find().select_only())
         .column_as(sbom_node_purl_ref::Column::SbomId, "sbom_id")
         .column_as(sbom_node_purl_ref::Column::NodeId, "node_id")
@@ -740,11 +778,14 @@ async fn load_advisory_purl_matches(
             purl_status::Relation::QualifiedPurl.def(),
             Alias::new("assertion_purl"),
         )
-        .join(JoinType::InnerJoin, purl_status::Relation::BasePurl.def())
-        .join(
-            JoinType::InnerJoin,
-            base_purl::Relation::VersionedPurls.def(),
-        )
+        .join(JoinType::InnerJoin, purl_status::Relation::BasePurl.def());
+    QueryTrait::query(&mut select).join_lateral(
+        JoinType::InnerJoin,
+        sbom_versions(),
+        versioned_purl::Entity,
+        Expr::value(true),
+    );
+    Ok(select
         .join(
             JoinType::InnerJoin,
             versioned_purl::Relation::QualifiedPurl.def(),
